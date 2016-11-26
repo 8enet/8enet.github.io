@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="zzzmode在 Github 上的个人博客">
+    <meta name="keyword" content="null">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="alternate" type="application/atom+xml" title="zzzmode" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        java.lang.UnsatisfiedLinkError 的解决办法｜zzzmode&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://blog.zzzmode.com/2016/10/22/android-unsatisfiedlinkerror-fix/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    zzzmode
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>java.lang.UnsatisfiedLinkError 的解决办法</h1>
+                    
+                    <span class="meta">
+                    
+                        <span>
+                          日期 2016-10-22
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#android"
+                           title="android">android</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            java.lang.UnsatisfiedLinkError 的解决办法
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-2 post-container">
+                <p>在实际开发中时不时的在部分手机上会出现一些  </p>
+<blockquote>
+<p>java.lang.UnsatisfiedLinkError: Couldn’t load solibrary from loader dalvik.system.PathClassLoader: findLibrary returned null<br>java.lang.UnsatisfiedLinkError: Library solibrary not found</p>
+</blockquote>
+<p>等错误，虽然概率不高但经常有。<br>根据提示就可以知道是so库找不到造成的，但是so应该在安装时就放到了<code>/data/data/com.your.packagename/lib</code> 下面，根据KeepSafe提供的经验，是因为安装时pm不稳定造成的。</p>
+<h4 id="怎么复现这些问题呢？"><a href="#怎么复现这些问题呢？" class="headerlink" title="怎么复现这些问题呢？"></a>怎么复现这些问题呢？</h4><p>就是安装好应用后删掉<code>/data/data/com.your.packagename/lib</code>下面的so库就会出现。<br>正常情况下是不会丢失so库的。</p>
+<h4 id="如何解决这种问题？"><a href="#如何解决这种问题？" class="headerlink" title="如何解决这种问题？"></a>如何解决这种问题？</h4><p>本来so应该在我们apk里面，找不到时再复制一份不就可以了吗？<br>思路是这样，中间也有很多情况，比如不同arm&amp;mips&amp;x86 architecture以及32&amp;64-bit 区别等。<br>这里推荐<a href="https://github.com/KeepSafe/ReLinker" target="_blank" rel="external">Relinker</a> 用法很简单。<br>把<code>System.loadLibrary(&quot;mylibrary&quot;)</code> 替换成<code>ReLinker.loadLibrary(context, &quot;mylibrary&quot;)</code> 就可以了。</p>
+<h4 id="Relinker实现原理"><a href="#Relinker实现原理" class="headerlink" title="Relinker实现原理"></a>Relinker实现原理</h4><p>我们看它的核心加载在<br><a href="https://github.com/KeepSafe/ReLinker/blob/1.2.2/relinker/src/main/java/com/getkeepsafe/relinker/ReLinkerInstance.java#L154" target="_blank" rel="external">com/getkeepsafe/relinker/ReLinkerInstance.java#L154</a>   </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">loadLibraryInternal</span><span class="params">(<span class="keyword">final</span> Context context,</span></span></div><div class="line">                                     <span class="keyword">final</span> String library,</div><div class="line">                                     <span class="keyword">final</span> String version) &#123;</div><div class="line">        <span class="keyword">if</span> (loadedLibraries.contains(library) &amp;&amp; !force) &#123;</div><div class="line">            log(<span class="string">"%s already loaded previously!"</span>, library);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            libraryLoader.loadLibrary(library);</div><div class="line">            loadedLibraries.add(library);</div><div class="line">            <span class="comment">//正常情况下加载so成功后不再做任何处理</span></div><div class="line">            log(<span class="string">"%s (%s) was loaded normally!"</span>, library, version);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> UnsatisfiedLinkError e) &#123;</div><div class="line">            <span class="comment">// :-(</span></div><div class="line">            log(<span class="string">"Loading the library normally failed: %s"</span>, Log.getStackTraceString(e));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//加载不成功的情况</span></div><div class="line">        log(<span class="string">"%s (%s) was not loaded normally, re-linking..."</span>, library, version);</div><div class="line"></div><div class="line">        <span class="comment">//首先尝试从 /data/data/packagename/app-lib/下加载so</span></div><div class="line">        <span class="comment">//这个目录下存放的是ReLinker从apk里面copy出来的so文件</span></div><div class="line"></div><div class="line">        <span class="keyword">final</span> File workaroundFile = getWorkaroundLibFile(context, library, version);</div><div class="line">        <span class="keyword">if</span> (!workaroundFile.exists() || force) &#123;</div><div class="line">            <span class="keyword">if</span> (force) &#123;</div><div class="line">                log(<span class="string">"Forcing a re-link of %s (%s)..."</span>, library, version);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">//如果没有或者需要更新so文件，先清理旧文件</span></div><div class="line"></div><div class="line">            cleanupOldLibFiles(context, library, version);</div><div class="line"></div><div class="line">            <span class="comment">//从apk中copy so文件到app-lib/目录下</span></div><div class="line"></div><div class="line">            libraryInstaller.installLibrary(context, libraryLoader.supportedAbis(),</div><div class="line">                    libraryLoader.mapLibraryName(library), workaroundFile, <span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">        	<span class="comment">//支持加载so的依赖</span></div><div class="line">            <span class="keyword">if</span> (recursive) &#123;</div><div class="line">                <span class="keyword">final</span> ElfParser parser = <span class="keyword">new</span> ElfParser(workaroundFile);</div><div class="line">                <span class="keyword">final</span> List&lt;String&gt; dependencies = parser.parseNeededDependencies();</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">final</span> String dependency : dependencies) &#123;</div><div class="line">                    loadLibrary(context, libraryLoader.unmapLibraryName(dependency));</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException ignored) &#123;</div><div class="line">            <span class="comment">// This a redundant step of the process, if our library resolving fails, it will likely</span></div><div class="line">            <span class="comment">// be picked up by the system's resolver, if not, an exception will be thrown by the</span></div><div class="line">            <span class="comment">// next statement, so its better to try twice.</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//最后加载app-lib/下的so文件</span></div><div class="line">        libraryLoader.loadPath(workaroundFile.getAbsolutePath());</div><div class="line">        loadedLibraries.add(library);</div><div class="line">        log(<span class="string">"%s (%s) was re-linked!"</span>, library, version);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>其中支持加载so的依赖库是因为<code>System.loadLibrary(libraryName)</code> 与 <code>System.load(libraryPath)</code> 是有区别的，看参数名称就可以知道<code>System.loadLibrary(libraryName)</code> 只需要知道库名称就会自动在<code>java.library.path</code> 中加载库同时会加载对应依赖的库，而<code>System.load(libraryPath)</code> 只会加载指定的库不会加载它所依赖的其他库，所以使用ReLinker加载有外部依赖的库时需要使用<code>ReLinker.recursively().loadLibrary(...)</code> 方法去加载。</p>
+<p>对于第三方sdk里面的so出现异常就没办法了，只希望尽量不要crash。<br>最后大赞<a href="https://github.com/facebook/fresco" target="_blank" rel="external">facebook fresco</a>，对于so加载也提供了对外扩展的方法<a href="https://github.com/facebook/fresco/blob/master/fbcore/src/main/java/com/facebook/common/soloader/SoLoaderShim.java" target="_blank" rel="external">com/facebook/common/soloader/SoLoaderShim.java</a> 这样就可以通过扩展配合ReLinker安全的加载so库了。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/12/22/charles-4.0.2-cracked/" data-toggle="tooltip" data-placement="top"
+                           title="Charles 4.0.2 破解">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/05/28/android-roprop-modify/" data-toggle="tooltip" data-placement="top"
+                           title="Android修改ro.debuggable属性">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+
+            
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "blog-zzzmode";
+    var disqus_identifier = "https://blog.zzzmode.com/2016/10/22/android-unsatisfiedlinkerror-fix/";
+    var disqus_url = "https://blog.zzzmode.com/2016/10/22/android-unsatisfiedlinkerror-fix/";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/8enet">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/8enet">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; zzzmode 2016
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <!-- Theme by <a href="https://haojen.github.io/">Haojen Ma</a> -->
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("//js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-76336437-1';
+    var _gaDomain = 'auto';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+<script>
+    var _baId = 'bcaf2d2592555e2860b1c0c14f5a911f';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+</body>
+
+</html>

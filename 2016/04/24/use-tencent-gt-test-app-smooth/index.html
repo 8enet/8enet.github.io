@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="zzzmode在 Github 上的个人博客">
+    <meta name="keyword" content="null">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="alternate" type="application/atom+xml" title="zzzmode" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        使用腾讯GT测试Android app流畅度｜zzzmode&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://blog.zzzmode.com/2016/04/24/use-tencent-gt-test-app-smooth/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    zzzmode
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>使用腾讯GT测试Android app流畅度</h1>
+                    
+                    <span class="meta">
+                    
+                        <span>
+                          日期 2016-04-24
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#android"
+                           title="android">android</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            使用腾讯GT测试Android app流畅度
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-2 post-container">
+                <p>首先简单介绍下检测流畅度的原理:<br>大家在看logcat的时候是不是有时候会看到这样的log</p>
+<blockquote>
+<p>Skipped 30 frames!  The application may be doing too much work on its main thread.</p>
+</blockquote>
+<p>输出这段log的是<code>android.view.Choreographer</code>   </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SKIPPED_FRAME_WARNING_LIMIT = SystemProperties.getInt(<span class="string">"debug.choreographer.skipwarning"</span>, <span class="number">30</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">doFrame</span><span class="params">(<span class="keyword">long</span> frameTimeNanos, <span class="keyword">int</span> frame)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> startNanos;</div><div class="line">        <span class="keyword">synchronized</span> (mLock) &#123;</div><div class="line">            <span class="keyword">if</span> (!mFrameScheduled) &#123;</div><div class="line">                <span class="keyword">return</span>; <span class="comment">// no work to do</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">long</span> intendedFrameTimeNanos = frameTimeNanos;</div><div class="line">            startNanos = System.nanoTime();</div><div class="line">            <span class="keyword">final</span> <span class="keyword">long</span> jitterNanos = startNanos - frameTimeNanos;</div><div class="line">            <span class="keyword">if</span> (jitterNanos &gt;= mFrameIntervalNanos) &#123;</div><div class="line">                <span class="keyword">final</span> <span class="keyword">long</span> skippedFrames = jitterNanos / mFrameIntervalNanos;</div><div class="line">                <span class="keyword">if</span> (skippedFrames &gt;= SKIPPED_FRAME_WARNING_LIMIT) &#123;</div><div class="line">                	<span class="comment">//就是这里</span></div><div class="line">                    Log.i(TAG, <span class="string">"Skipped "</span> + skippedFrames + <span class="string">" frames!  "</span></div><div class="line">                            + <span class="string">"The application may be doing too much work on its main thread."</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;  </div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//...</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>也就是当跳帧数大于设置的<code>SKIPPED_FRAME_WARNING_LIMIT</code> 值时会在当前进程输出这个log.<br>这也是google在android 4.1中加入的vsync垂直同步特性，防止界面过于卡顿。<br>那么我们只要捕获这个log提取出<code>skippedFrames</code> 不就可以知道界面是否卡顿了吗？<br>而且如果可以把<code>SKIPPED_FRAME_WARNING_LIMIT</code> 设置为1的话更是可以非常精准的知道跳过了多少帧！  </p>
+<p>首先非常感谢腾讯开源了 <a href="https://github.com/TencentOpen/GT" target="_blank" rel="external">TencentOpen/GT</a>,现在我们来看看GT是怎么做到的:<br>1.在<code>com.tencent.wstt.gt.plugin.smtools.SMActivity</code> 中我们看到几条读写prop的命令</p>
+<p>&gt;<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">getprop debug.choreographer.skipwarning      //读取</div><div class="line">setprop debug.choreographer.skipwarning 1    //修改</div><div class="line">setprop debug.choreographer.skipwarning 30</div><div class="line">setprop ctl.restart surfaceflinger; setprop ctl.restart zygote    //重启</div></pre></td></tr></table></figure></p>
+<p>显然，当设置为1后重启，<code>SKIPPED_FRAME_WARNING_LIMIT</code> 值就修改了，可能会有很多log输出。   </p>
+<blockquote>
+<p>注意:getprop不需要权限但是setprop需要root权限，而且<code>SKIPPED_FRAME_WARNING_LIMIT</code> 是<br>静态常量所以会在重启后生效。</p>
+</blockquote>
+<p>2.然后在<code>com.tencent.wstt.gt.plugin.smtools.SMLogService</code>   </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onHandleIntent</span><span class="params">(Intent intent)</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            String str = intent.getStringExtra(<span class="string">"pid"</span>);</div><div class="line">            <span class="keyword">int</span> pid = Integer.parseInt(str);</div><div class="line">            List&lt;String&gt; args = <span class="keyword">new</span> ArrayList&lt;String&gt;(Arrays.asList(<span class="string">"logcat"</span>, <span class="string">"-v"</span>, <span class="string">"time"</span>, <span class="string">"Choreographer:I"</span>, <span class="string">"*:S"</span>));</div><div class="line"></div><div class="line">            dumpLogcatProcess = RuntimeHelper.exec(args);</div><div class="line">            reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(dumpLogcatProcess.getInputStream()), <span class="number">8192</span>);</div><div class="line"></div><div class="line">            String line;</div><div class="line"></div><div class="line">            <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span> &amp;&amp; !killed) &#123;</div><div class="line"></div><div class="line">                <span class="comment">// filter "The application may be doing too much work on its main thread."</span></div><div class="line">                <span class="keyword">if</span> (!line.contains(<span class="string">"uch work on its main t"</span>)) &#123;</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="comment">//root情况下会得到全局log，需要判断是否是指定进程输出的，</span></div><div class="line">                <span class="keyword">int</span> pID = LogLine.newLogLine(line, <span class="keyword">false</span>).getProcessId();</div><div class="line">                <span class="keyword">if</span> (pID != pid)&#123;</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="comment">//简单粗暴的提取出skippedFrames...</span></div><div class="line">                line = line.substring(<span class="number">50</span>, line.length() - <span class="number">71</span>);</div><div class="line">                Integer value = Integer.parseInt(line.trim());</div><div class="line"></div><div class="line"></div><div class="line">                SMServiceHelper.getInstance().dataQueue.offer(value);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            Log.e(TAG, e.toString() + <span class="string">"unexpected exception"</span>);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            killProcess();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>我们可以看到内部其实执行的是<code>logcat -v time Choreographer:I *:S</code> 这条命令只输出<br><code>Log.i(&quot;Choreographer&quot;,&quot;&quot;)</code> 的log</p>
+<p>3.最后在<code>com.tencent.wstt.gt.plugin.smtools.SMDataService</code> 中计算出处理的流畅度的。</p>
+<hr>
+<p>整个过程也不是非常复杂但是需要root权限有点坑，其实核心的2个步骤是修改<br><code>SKIPPED_FRAME_WARNING_LIMIT</code> 和 读取logcat，其中读取自己logcat是不需要root权限的，但是怎么修改<br><code>SKIPPED_FRAME_WARNING_LIMIT</code> 呢，反射吗？这可是<code>static final</code> 的啊，在jvm里面确实不可修改，但是在android里面呢？试试吧   </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Field field = Choreographer.class.getDeclaredField(<span class="string">"SKIPPED_FRAME_WARNING_LIMIT"</span>);</div><div class="line">            field.setAccessible(<span class="keyword">true</span>);</div><div class="line">            field.set(Choreographer.class,<span class="number">1</span>);</div><div class="line">            Log.e(<span class="string">"test"</span>, <span class="string">"static initializer --&gt; "</span>+field.get(Choreographer.class));</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>你没看错，其实是可以修改的！当然只是修改自己进程的，但这就够了。<br>还有一个问题的怎么在A应用中读取B应用的logcat呢？不错，设置相同的<code>android:sharedUserId</code>就可以了。<br>说了这么多，来试试!<br><a href="https://github.com/TencentOpen/GT" target="_blank" rel="external">TencentOpen/GT</a> 原项目没有提供依赖jar，这里我添加好了，并添加了build.gradle方便编译<br>项目地址<a href="https://github.com/8enet/GT/tree/master/android" target="_blank" rel="external">https://github.com/8enet/GT/tree/master/android</a><br>没有修改任何代码，可以自行根据说明添加jar包，那么现在只需要通过以下步骤即可免root检测应用流畅度了   </p>
+<ol>
+<li>在自己开发的应用中通过反射修改<code>SKIPPED_FRAME_WARNING_LIMIT</code> 并且设置<br><code>android:sharedUserId</code>   </li>
+<li>手动编译GT项目，设置和自己应用一样的<code>android:sharedUserId</code><br>ok，安装后即可检测流畅度了。</li>
+</ol>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/05/02/osx-mediakit-reports-partition-map-too-small/" data-toggle="tooltip" data-placement="top"
+                           title="Mac OSX 抹盘发生错误:Mediakit 报告设备上空间不足以执行此操作的解决办法">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/04/15/docker-mongodb-redis-config/" data-toggle="tooltip" data-placement="top"
+                           title="在docker容器中使用mongodb和redis">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+
+            
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "blog-zzzmode";
+    var disqus_identifier = "https://blog.zzzmode.com/2016/04/24/use-tencent-gt-test-app-smooth/";
+    var disqus_url = "https://blog.zzzmode.com/2016/04/24/use-tencent-gt-test-app-smooth/";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/8enet">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/8enet">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; zzzmode 2016
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <!-- Theme by <a href="https://haojen.github.io/">Haojen Ma</a> -->
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("//js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-76336437-1';
+    var _gaDomain = 'auto';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+<script>
+    var _baId = 'bcaf2d2592555e2860b1c0c14f5a911f';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+</body>
+
+</html>
