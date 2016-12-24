@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        java.lang.UnsatisfiedLinkError 的解决办法｜zzzmode&#39;s blog
+        Charles 4.0.2 破解｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2016/10/22/android-unsatisfiedlinkerror-fix/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2016/11/22/charles-4.0.2-cracked/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -145,18 +145,20 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>java.lang.UnsatisfiedLinkError 的解决办法</h1>
+                    <h1>Charles 4.0.2 破解</h1>
                     
                     <span class="meta">
                     
+                      作者 zzzz
+                    
                         <span>
-                          日期 2016-10-22
+                          日期 2016-11-22
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#android"
-                           title="android">android</a>
+                        <a class="tag" href="/tags/#charles"
+                           title="charles">charles</a>
                         
                     </div>
                 </div>
@@ -165,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            java.lang.UnsatisfiedLinkError 的解决办法
+            Charles 4.0.2 破解
         </span>
     </div>
 </header>
@@ -176,30 +178,22 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>在实际开发中时不时的在部分手机上会出现一些  </p>
-<blockquote>
-<p>java.lang.UnsatisfiedLinkError: Couldn’t load solibrary from loader dalvik.system.PathClassLoader: findLibrary returned null<br>java.lang.UnsatisfiedLinkError: Library solibrary not found</p>
-</blockquote>
-<p>等错误，虽然概率不高但经常有。<br>根据提示就可以知道是so库找不到造成的，但是so应该在安装时就放到了<code>/data/data/com.your.packagename/lib</code> 下面，根据KeepSafe提供的经验，是因为安装时pm不稳定造成的。</p>
-<h4 id="怎么复现这些问题呢？"><a href="#怎么复现这些问题呢？" class="headerlink" title="怎么复现这些问题呢？"></a>怎么复现这些问题呢？</h4><p>就是安装好应用后删掉<code>/data/data/com.your.packagename/lib</code>下面的so库就会出现。<br>正常情况下是不会丢失so库的。</p>
-<h4 id="如何解决这种问题？"><a href="#如何解决这种问题？" class="headerlink" title="如何解决这种问题？"></a>如何解决这种问题？</h4><p>本来so应该在我们apk里面，找不到时再复制一份不就可以了吗？<br>思路是这样，中间也有很多情况，比如不同arm&amp;mips&amp;x86 architecture以及32&amp;64-bit 区别等。<br>这里推荐<a href="https://github.com/KeepSafe/ReLinker" target="_blank" rel="external">Relinker</a> 用法很简单。<br>把<code>System.loadLibrary(&quot;mylibrary&quot;)</code> 替换成<code>ReLinker.loadLibrary(context, &quot;mylibrary&quot;)</code> 就可以了。</p>
-<h4 id="Relinker实现原理"><a href="#Relinker实现原理" class="headerlink" title="Relinker实现原理"></a>Relinker实现原理</h4><p>我们看它的核心加载在<br><a href="https://github.com/KeepSafe/ReLinker/blob/1.2.2/relinker/src/main/java/com/getkeepsafe/relinker/ReLinkerInstance.java#L154" target="_blank" rel="external">com/getkeepsafe/relinker/ReLinkerInstance.java#L154</a>   </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">loadLibraryInternal</span><span class="params">(<span class="keyword">final</span> Context context,</span></span></div><div class="line">                                     <span class="keyword">final</span> String library,</div><div class="line">                                     <span class="keyword">final</span> String version) &#123;</div><div class="line">        <span class="keyword">if</span> (loadedLibraries.contains(library) &amp;&amp; !force) &#123;</div><div class="line">            log(<span class="string">"%s already loaded previously!"</span>, library);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            libraryLoader.loadLibrary(library);</div><div class="line">            loadedLibraries.add(library);</div><div class="line">            <span class="comment">//正常情况下加载so成功后不再做任何处理</span></div><div class="line">            log(<span class="string">"%s (%s) was loaded normally!"</span>, library, version);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> UnsatisfiedLinkError e) &#123;</div><div class="line">            <span class="comment">// :-(</span></div><div class="line">            log(<span class="string">"Loading the library normally failed: %s"</span>, Log.getStackTraceString(e));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//加载不成功的情况</span></div><div class="line">        log(<span class="string">"%s (%s) was not loaded normally, re-linking..."</span>, library, version);</div><div class="line"></div><div class="line">        <span class="comment">//首先尝试从 /data/data/packagename/app-lib/下加载so</span></div><div class="line">        <span class="comment">//这个目录下存放的是ReLinker从apk里面copy出来的so文件</span></div><div class="line"></div><div class="line">        <span class="keyword">final</span> File workaroundFile = getWorkaroundLibFile(context, library, version);</div><div class="line">        <span class="keyword">if</span> (!workaroundFile.exists() || force) &#123;</div><div class="line">            <span class="keyword">if</span> (force) &#123;</div><div class="line">                log(<span class="string">"Forcing a re-link of %s (%s)..."</span>, library, version);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">//如果没有或者需要更新so文件，先清理旧文件</span></div><div class="line"></div><div class="line">            cleanupOldLibFiles(context, library, version);</div><div class="line"></div><div class="line">            <span class="comment">//从apk中copy so文件到app-lib/目录下</span></div><div class="line"></div><div class="line">            libraryInstaller.installLibrary(context, libraryLoader.supportedAbis(),</div><div class="line">                    libraryLoader.mapLibraryName(library), workaroundFile, <span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">        	<span class="comment">//支持加载so的依赖</span></div><div class="line">            <span class="keyword">if</span> (recursive) &#123;</div><div class="line">                <span class="keyword">final</span> ElfParser parser = <span class="keyword">new</span> ElfParser(workaroundFile);</div><div class="line">                <span class="keyword">final</span> List&lt;String&gt; dependencies = parser.parseNeededDependencies();</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">final</span> String dependency : dependencies) &#123;</div><div class="line">                    loadLibrary(context, libraryLoader.unmapLibraryName(dependency));</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException ignored) &#123;</div><div class="line">            <span class="comment">// This a redundant step of the process, if our library resolving fails, it will likely</span></div><div class="line">            <span class="comment">// be picked up by the system's resolver, if not, an exception will be thrown by the</span></div><div class="line">            <span class="comment">// next statement, so its better to try twice.</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//最后加载app-lib/下的so文件</span></div><div class="line">        libraryLoader.loadPath(workaroundFile.getAbsolutePath());</div><div class="line">        loadedLibraries.add(library);</div><div class="line">        log(<span class="string">"%s (%s) was re-linked!"</span>, library, version);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>其中支持加载so的依赖库是因为<code>System.loadLibrary(libraryName)</code> 与 <code>System.load(libraryPath)</code> 是有区别的，看参数名称就可以知道<code>System.loadLibrary(libraryName)</code> 只需要知道库名称就会自动在<code>java.library.path</code> 中加载库同时会加载对应依赖的库，而<code>System.load(libraryPath)</code> 只会加载指定的库不会加载它所依赖的其他库，所以使用ReLinker加载有外部依赖的库时需要使用<code>ReLinker.recursively().loadLibrary(...)</code> 方法去加载。</p>
-<p>对于第三方sdk里面的so出现异常就没办法了，只希望尽量不要crash。<br>最后大赞<a href="https://github.com/facebook/fresco" target="_blank" rel="external">facebook fresco</a>，对于so加载也提供了对外扩展的方法<a href="https://github.com/facebook/fresco/blob/master/fbcore/src/main/java/com/facebook/common/soloader/SoLoaderShim.java" target="_blank" rel="external">com/facebook/common/soloader/SoLoaderShim.java</a> 这样就可以通过扩展配合ReLinker安全的加载so库了。</p>
+                <h1 id="请支持正版，仅供技术交流。"><a href="#请支持正版，仅供技术交流。" class="headerlink" title="请支持正版，仅供技术交流。"></a>请支持正版，仅供技术交流。</h1><p>Charles 4.0.2 和之前版本的破解方式一样，直接上代码<br>先复制一份charles.jar出来，mac下的路径是<code>/Applications/Charles.app/Contents/Java/charles.jar</code> </p>
+<p>需要使用javassist修改字节码<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">compile &apos;org.javassist:javassist:3.20.0-GA&apos;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">classPool=ClassPool.getDefault();</div><div class="line">classPool.insertClassPath(<span class="string">"/path/charles.jar"</span>); <span class="comment">//复制出来charles.jar的文件路径</span></div><div class="line"></div><div class="line">CtClass ctClass = classPool.get(<span class="string">"com.xk72.charles.License"</span>);</div><div class="line">CtMethod ctMethod =ctClass.getDeclaredMethod(<span class="string">"a"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return true;&#125;"</span>);</div><div class="line">ctMethod = ctClass.getDeclaredMethod(<span class="string">"b"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return \"Regisered Name\";&#125;"</span>);</div></pre></td></tr></table></figure>
+<p>执行之后会生成 <code>com/xk72/charles/License.class</code> 文件<br>使用<code>jar uvf charles.jar com/xk72/charles/License.class</code> 命令将修改后的class打入jar包，注意jar和class的路径。</p>
+<p>注意:为了保险起见先把原始charles.jar复制到其他目录，将破解后的charles.jar移动到对应位置，我之前为了偷懒只是修改了原始charles.jar的文件名，并没有移动到其他目录，结果一直有未注册的提示，把原charles.jar移动到其他目录后确保该目录下只有一个charles.jar就好了。</p>
 
                 <hr>
                 
                 <!-- 多说 Share start -->
                 <div class="ds-share"
                      style="text-align: right"
-                     data-thread-key="2016/10/22/android-unsatisfiedlinkerror-fix/"
-                     data-title="java.lang.UnsatisfiedLinkError 的解决办法"
-                     data-url="https://blog.zzzmode.com/2016/10/22/android-unsatisfiedlinkerror-fix/"
+                     data-thread-key="2016/11/22/charles-4.0.2-cracked/"
+                     data-title="Charles 4.0.2 破解"
+                     data-url="https://blog.zzzmode.com/2016/11/22/charles-4.0.2-cracked/"
                      data-images=""
-                     data-content="在实际开发中时不时的在部分手机上会出现一些  
-
-java.lang.UnsatisfiedL... | zzzmode&#39;s blog ">
+                     data-content="请支持正版，仅供技术交流。Charles 4.0.2 和之前版本的破解方式一样，直接上代码先复... | zzzmode&#39;s blog ">
                     <div class="ds-share-inline">
                         <ul class="ds-share-icons-16">
                             <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
@@ -218,14 +212,14 @@ java.lang.UnsatisfiedL... | zzzmode&#39;s blog ">
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/11/22/charles-4.0.2-cracked/" data-toggle="tooltip" data-placement="top"
-                           title="Charles 4.0.2 破解">&larr; Previous Post</a>
+                        <a href="/2016/12/24/android-strange-bug-part1/" data-toggle="tooltip" data-placement="top"
+                           title="Android遇到的奇怪bug">&larr; Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2016/05/28/android-roprop-modify/" data-toggle="tooltip" data-placement="top"
-                           title="Android修改ro.debuggable属性">Next Post &rarr;</a>
+                        <a href="/2016/10/22/android-unsatisfiedlinkerror-fix/" data-toggle="tooltip" data-placement="top"
+                           title="java.lang.UnsatisfiedLinkError 的解决办法">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -234,9 +228,9 @@ java.lang.UnsatisfiedL... | zzzmode&#39;s blog ">
                 <!-- 多说评论框 start -->
                 <div class="comment">
                     <div class="ds-thread"
-                         data-thread-key="2016/10/22/android-unsatisfiedlinkerror-fix/"
-                         data-title="java.lang.UnsatisfiedLinkError 的解决办法"
-                         data-url="https://blog.zzzmode.com/2016/10/22/android-unsatisfiedlinkerror-fix/">
+                         data-thread-key="2016/11/22/charles-4.0.2-cracked/"
+                         data-title="Charles 4.0.2 破解"
+                         data-url="https://blog.zzzmode.com/2016/11/22/charles-4.0.2-cracked/">
                     </div>
                 </div>
                 <!-- 多说评论框 end -->
