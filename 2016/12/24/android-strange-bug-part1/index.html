@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        Charles 4.0.2 破解｜zzzmode&#39;s blog
+        Android遇到的奇怪bug｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2016/12/22/charles-4.0.2-cracked/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2016/12/24/android-strange-bug-part1/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -145,20 +145,18 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>Charles 4.0.2 破解</h1>
+                    <h1>Android遇到的奇怪bug</h1>
                     
                     <span class="meta">
                     
-                      作者 zzzz
-                    
                         <span>
-                          日期 2016-12-22
+                          日期 2016-12-24
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#charles"
-                           title="charles">charles</a>
+                        <a class="tag" href="/tags/#android"
+                           title="android">android</a>
                         
                     </div>
                 </div>
@@ -167,7 +165,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            Charles 4.0.2 破解
+            Android遇到的奇怪bug
         </span>
     </div>
 </header>
@@ -178,22 +176,26 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <h1 id="请支持正版，仅供技术交流。"><a href="#请支持正版，仅供技术交流。" class="headerlink" title="请支持正版，仅供技术交流。"></a>请支持正版，仅供技术交流。</h1><p>Charles 4.0.2 和之前版本的破解方式一样，直接上代码<br>先复制一份charles.jar出来，mac下的路径是<code>/Applications/Charles.app/Contents/Java/charles.jar</code> </p>
-<p>需要使用javassist修改字节码<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">compile &apos;org.javassist:javassist:3.20.0-GA&apos;</div></pre></td></tr></table></figure></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">classPool=ClassPool.getDefault();</div><div class="line">classPool.insertClassPath(<span class="string">"/path/charles.jar"</span>); <span class="comment">//复制出来charles.jar的文件路径</span></div><div class="line"></div><div class="line">CtClass ctClass = classPool.get(<span class="string">"com.xk72.charles.License"</span>);</div><div class="line">CtMethod ctMethod =ctClass.getDeclaredMethod(<span class="string">"a"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return true;&#125;"</span>);</div><div class="line">ctMethod = ctClass.getDeclaredMethod(<span class="string">"b"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return \"Regisered Name\";&#125;"</span>);</div></pre></td></tr></table></figure>
-<p>执行之后会生成 <code>com/xk72/charles/License.class</code> 文件<br>使用<code>jar uvf charles.jar com/xk72/charles/License.class</code> 命令将修改后的class打入jar包，注意jar和class的路径。</p>
-<p>注意:为了保险起见先把原始charles.jar复制到其他目录，将破解后的charles.jar移动到对应位置，我之前为了偷懒只是修改了原始charles.jar的文件名，并没有移动到其他目录，结果一直有未注册的提示，把原charles.jar移动到其他目录后确保该目录下只有一个charles.jar就好了。</p>
+                <p>最近遇到一个奇怪的bug关于界面布局在<code>RecyclerView</code> 中显示有问题，而且和系统版本有关。<br>直接上代码，简化版本的布局<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    android:layout_width=&quot;match_parent&quot;</div><div class="line">    android:layout_height=&quot;wrap_content&quot;</div><div class="line">    android:orientation=&quot;horizontal&quot;</div><div class="line">    android:paddingLeft=&quot;14dp&quot;</div><div class="line">    android:paddingRight=&quot;14dp&quot;&gt;</div><div class="line"></div><div class="line">    &lt;TextView</div><div class="line">        android:id=&quot;@+id/tv_title&quot;</div><div class="line">        android:layout_width=&quot;wrap_content&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:layout_gravity=&quot;center_vertical&quot;</div><div class="line">        android:layout_marginLeft=&quot;15dp&quot;</div><div class="line">        android:textColor=&quot;@color/colorPrimary&quot;</div><div class="line">        android:layout_marginTop=&quot;10dp&quot;</div><div class="line">        android:text=&quot;position-&quot;</div><div class="line">        android:textSize=&quot;16sp&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;FrameLayout</div><div class="line">        android:layout_width=&quot;wrap_content&quot;</div><div class="line">        android:layout_height=&quot;match_parent&quot;</div><div class="line">        android:layout_alignTop=&quot;@id/tv_title&quot;</div><div class="line">        android:layout_alignBottom=&quot;@id/tv_title&quot;&gt;</div><div class="line"></div><div class="line">        &lt;View</div><div class="line">            android:layout_width=&quot;1dp&quot;</div><div class="line">            android:layout_height=&quot;match_parent&quot;</div><div class="line">            android:background=&quot;@color/colorAccent&quot; /&gt;</div><div class="line">    &lt;/FrameLayout&gt;</div><div class="line"></div><div class="line">&lt;/RelativeLayout&gt;</div></pre></td></tr></table></figure></p>
+<p>显示效果如图<br><img src="/images/android/p1.png" alt="正常效果图"></p>
+<p>将这个布局用在<code>RecyclerView</code> 中<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item,parent,false));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在<strong>android6.0</strong>上显示效果如下<br><img src="/images/android/p2.png" alt="android6.0正常列表"><br>效果正常，但是通用的代码在 <strong>android 4.4</strong> 上却显示成这样</p>
+<p><img src="/images/android/p3.png" alt="android4.4不正常列表"><br>显示不出左边的竖线了！!<br>这里使用的版本是<code>compile &#39;com.android.support:recyclerview-v7:24.2.1&#39;</code></p>
+<p>因为我一直用的6.0的手机测试，并没有发现这个问题，直到测试在4.4的手机上运行时才发现这个问题。</p>
+<p>非常奇怪的问题，暂时没有深究，猜猜可能与<code>layout_alignTop</code> <code>layout_alignBottom</code> 有关.<br>要在4.4的中使用如下代码就可以正常显示了<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">    LinearLayout linearLayout=new LinearLayout(parent.getContext());</div><div class="line">    linearLayout.setOrientation(LinearLayout.VERTICAL);</div><div class="line">    linearLayout.addView(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item,parent,false),LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);</div><div class="line">    return new ViewHolder(linearLayout);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当然，也有可能是竖线View的问题，下面这样布局也可以的<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line"></div><div class="line"></div><div class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    android:layout_width=&quot;match_parent&quot;</div><div class="line">    android:layout_height=&quot;wrap_content&quot;</div><div class="line">    android:orientation=&quot;horizontal&quot;</div><div class="line">    android:paddingLeft=&quot;14dp&quot;</div><div class="line">    android:paddingRight=&quot;14dp&quot;&gt;</div><div class="line"></div><div class="line">    &lt;TextView</div><div class="line">        android:id=&quot;@+id/tv_title&quot;</div><div class="line">        android:layout_width=&quot;wrap_content&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:layout_gravity=&quot;center_vertical&quot;</div><div class="line">        android:layout_marginLeft=&quot;15dp&quot;</div><div class="line">        android:layout_marginTop=&quot;10dp&quot;</div><div class="line">        android:text=&quot;position-&quot;</div><div class="line">        android:textColor=&quot;@color/colorPrimary&quot;</div><div class="line">        android:textSize=&quot;16sp&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;View</div><div class="line">        android:layout_width=&quot;1dp&quot;</div><div class="line">        android:layout_height=&quot;match_parent&quot;</div><div class="line">        android:layout_alignBottom=&quot;@id/tv_title&quot;</div><div class="line">        android:layout_alignTop=&quot;@id/tv_title&quot;</div><div class="line">        android:background=&quot;@color/colorAccent&quot; /&gt;</div><div class="line"></div><div class="line">&lt;/RelativeLayout&gt;</div></pre></td></tr></table></figure></p>
+<p>有空再深入研究下RelativeLayout.</p>
 
                 <hr>
                 
                 <!-- 多说 Share start -->
                 <div class="ds-share"
                      style="text-align: right"
-                     data-thread-key="2016/12/22/charles-4.0.2-cracked/"
-                     data-title="Charles 4.0.2 破解"
-                     data-url="https://blog.zzzmode.com/2016/12/22/charles-4.0.2-cracked/"
+                     data-thread-key="2016/12/24/android-strange-bug-part1/"
+                     data-title="Android遇到的奇怪bug"
+                     data-url="https://blog.zzzmode.com/2016/12/24/android-strange-bug-part1/"
                      data-images=""
-                     data-content="请支持正版，仅供技术交流。Charles 4.0.2 和之前版本的破解方式一样，直接上代码先复... | zzzmode&#39;s blog ">
+                     data-content="最近遇到一个奇怪的bug关于界面布局在RecyclerView 中显示有问题，而且和系统版本有... | zzzmode&#39;s blog ">
                     <div class="ds-share-inline">
                         <ul class="ds-share-icons-16">
                             <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
@@ -211,15 +213,10 @@
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2016/12/24/android-strange-bug-part1/" data-toggle="tooltip" data-placement="top"
-                           title="Android遇到的奇怪bug">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2016/10/22/android-unsatisfiedlinkerror-fix/" data-toggle="tooltip" data-placement="top"
-                           title="java.lang.UnsatisfiedLinkError 的解决办法">Next Post &rarr;</a>
+                        <a href="/2016/12/22/charles-4.0.2-cracked/" data-toggle="tooltip" data-placement="top"
+                           title="Charles 4.0.2 破解">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -228,9 +225,9 @@
                 <!-- 多说评论框 start -->
                 <div class="comment">
                     <div class="ds-thread"
-                         data-thread-key="2016/12/22/charles-4.0.2-cracked/"
-                         data-title="Charles 4.0.2 破解"
-                         data-url="https://blog.zzzmode.com/2016/12/22/charles-4.0.2-cracked/">
+                         data-thread-key="2016/12/24/android-strange-bug-part1/"
+                         data-title="Android遇到的奇怪bug"
+                         data-url="https://blog.zzzmode.com/2016/12/24/android-strange-bug-part1/">
                     </div>
                 </div>
                 <!-- 多说评论框 end -->
