@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        Android遇到的奇怪bug｜zzzmode&#39;s blog
+        Android LayoutInflater 探索｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2016/12/24/android-strange-bug-part1/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2016/12/25/android-LayoutInflater/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -145,14 +145,12 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>Android遇到的奇怪bug</h1>
+                    <h1>Android LayoutInflater 探索</h1>
                     
                     <span class="meta">
                     
-                      作者 zheng li
-                    
                         <span>
-                          日期 2016-12-24
+                          日期 2016-12-25
                          </span>
                     </span>
                     <div class="tags text-center">
@@ -167,7 +165,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            Android遇到的奇怪bug
+            Android LayoutInflater 探索
         </span>
     </div>
 </header>
@@ -178,26 +176,28 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>最近遇到一个奇怪的bug关于界面布局在<code>RecyclerView</code> 中显示有问题，而且和系统版本有关。<br>直接上代码，简化版本的布局<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    android:layout_width=&quot;match_parent&quot;</div><div class="line">    android:layout_height=&quot;wrap_content&quot;</div><div class="line">    android:orientation=&quot;horizontal&quot;</div><div class="line">    android:paddingLeft=&quot;14dp&quot;</div><div class="line">    android:paddingRight=&quot;14dp&quot;&gt;</div><div class="line"></div><div class="line">    &lt;TextView</div><div class="line">        android:id=&quot;@+id/tv_title&quot;</div><div class="line">        android:layout_width=&quot;wrap_content&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:layout_gravity=&quot;center_vertical&quot;</div><div class="line">        android:layout_marginLeft=&quot;15dp&quot;</div><div class="line">        android:textColor=&quot;@color/colorPrimary&quot;</div><div class="line">        android:layout_marginTop=&quot;10dp&quot;</div><div class="line">        android:text=&quot;position-&quot;</div><div class="line">        android:textSize=&quot;16sp&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;FrameLayout</div><div class="line">        android:layout_width=&quot;wrap_content&quot;</div><div class="line">        android:layout_height=&quot;match_parent&quot;</div><div class="line">        android:layout_alignTop=&quot;@id/tv_title&quot;</div><div class="line">        android:layout_alignBottom=&quot;@id/tv_title&quot;&gt;</div><div class="line"></div><div class="line">        &lt;View</div><div class="line">            android:layout_width=&quot;1dp&quot;</div><div class="line">            android:layout_height=&quot;match_parent&quot;</div><div class="line">            android:background=&quot;@color/colorAccent&quot; /&gt;</div><div class="line">    &lt;/FrameLayout&gt;</div><div class="line"></div><div class="line">&lt;/RelativeLayout&gt;</div></pre></td></tr></table></figure></p>
-<p>显示效果如图<br><img src="/images/android/p1.png" alt="正常效果图"></p>
-<p>将这个布局用在<code>RecyclerView</code> 中<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item,parent,false));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在<strong>android6.0</strong>上显示效果如下<br><img src="/images/android/p2.png" alt="android6.0正常列表"><br>效果正常，但是通用的代码在 <strong>android 4.4</strong> 上却显示成这样</p>
-<p><img src="/images/android/p3.png" alt="android4.4不正常列表"><br>显示不出左边的竖线了！!<br>这里使用的版本是<code>compile &#39;com.android.support:recyclerview-v7:24.2.1&#39;</code></p>
-<p>因为我一直用的6.0的手机测试，并没有发现这个问题，直到测试在4.4的手机上运行时才发现这个问题。</p>
-<p>非常奇怪的问题，暂时没有深究，猜猜可能与<code>layout_alignTop</code> <code>layout_alignBottom</code> 有关.<br>要在4.4的中使用如下代码就可以正常显示了<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">    LinearLayout linearLayout=new LinearLayout(parent.getContext());</div><div class="line">    linearLayout.setOrientation(LinearLayout.VERTICAL);</div><div class="line">    linearLayout.addView(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item,parent,false),LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);</div><div class="line">    return new ViewHolder(linearLayout);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>当然，也有可能是竖线View的问题，下面这样布局也可以的<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line"></div><div class="line"></div><div class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    android:layout_width=&quot;match_parent&quot;</div><div class="line">    android:layout_height=&quot;wrap_content&quot;</div><div class="line">    android:orientation=&quot;horizontal&quot;</div><div class="line">    android:paddingLeft=&quot;14dp&quot;</div><div class="line">    android:paddingRight=&quot;14dp&quot;&gt;</div><div class="line"></div><div class="line">    &lt;TextView</div><div class="line">        android:id=&quot;@+id/tv_title&quot;</div><div class="line">        android:layout_width=&quot;wrap_content&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:layout_gravity=&quot;center_vertical&quot;</div><div class="line">        android:layout_marginLeft=&quot;15dp&quot;</div><div class="line">        android:layout_marginTop=&quot;10dp&quot;</div><div class="line">        android:text=&quot;position-&quot;</div><div class="line">        android:textColor=&quot;@color/colorPrimary&quot;</div><div class="line">        android:textSize=&quot;16sp&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;View</div><div class="line">        android:layout_width=&quot;1dp&quot;</div><div class="line">        android:layout_height=&quot;match_parent&quot;</div><div class="line">        android:layout_alignBottom=&quot;@id/tv_title&quot;</div><div class="line">        android:layout_alignTop=&quot;@id/tv_title&quot;</div><div class="line">        android:background=&quot;@color/colorAccent&quot; /&gt;</div><div class="line"></div><div class="line">&lt;/RelativeLayout&gt;</div></pre></td></tr></table></figure></p>
-<p>有空再深入研究下RelativeLayout.</p>
+                <p><code>LayoutInflater.from(context)</code> 是我们非常常用的方法，在<code>Activity</code>也可以调用<code>getLayoutInflater()</code>获取，可能这其中也有一些需要注意的地方。</p>
+<p>先运行下面一段代码，猜猜运行结果，这三个方法运行后得到的是同一个对象吗？<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"MainActivity"</span>;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        Log.e(TAG, <span class="string">"onCreate --&gt;LayoutInflater.from(this): "</span>+LayoutInflater.from(<span class="keyword">this</span>));</div><div class="line">        Log.e(TAG, <span class="string">"onCreate --&gt;getLayoutInflater(): "</span>+getLayoutInflater());</div><div class="line">        Log.e(TAG, <span class="string">"onCreate --&gt;LayoutInflater.from(getApplicationContext()): "</span>+LayoutInflater.from(getApplicationContext()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面看看结果:<br><img src="/images/android/android-layoutinflater-p1.png" alt="运行结果"><br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">12-25 16:20:24.716 26432-26432/? E/MainActivity: onCreate --&gt;LayoutInflater.from(this): com.android.internal.policy.PhoneLayoutInflater@f8ec208</div><div class="line">12-25 16:20:24.716 26432-26432/? E/MainActivity: onCreate --&gt;getLayoutInflater(): com.android.internal.policy.PhoneLayoutInflater@f8ec208</div><div class="line">12-25 16:20:24.716 26432-26432/? E/MainActivity: onCreate --&gt;LayoutInflater.from(getApplicationContext()): com.android.internal.policy.PhoneLayoutInflater@9173da1</div></pre></td></tr></table></figure></p>
+<p>也就是<code>LayoutInflater.from(Activity.this)</code>和<code>Activity.getLayoutInflater()</code>得到的是同一个对象，<br>而<code>LayoutInflater.from(getApplicationContext())</code> 并不相同，这就要注意在使用时有什么区别了。</p>
+<p>我们先看看<code>LayoutInflater.from(context)</code> 是怎么处理的<br><a href="https://github.com/android/platform_frameworks_base/blob/android-7.1.1_r6/core/java/android/view/LayoutInflater.java#L230" target="_blank" rel="external">LayoutInflater.java</a><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Obtains the LayoutInflater from the given context.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LayoutInflater <span class="title">from</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">    LayoutInflater LayoutInflater =</div><div class="line">            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</div><div class="line">    <span class="keyword">if</span> (LayoutInflater == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError(<span class="string">"LayoutInflater not found."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> LayoutInflater;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中<code>context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)</code> 又有多种实现，先来看看<code>Activity</code> 的:</p>
+<p><a href="https://github.com/android/platform_frameworks_base/blob/android-7.1.1_r6/core/java/android/app/Activity.java#L5596" target="_blank" rel="external">Activity.java</a><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getSystemService</span><span class="params">(@ServiceName @NonNull String name)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (getBaseContext() == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</div><div class="line">                <span class="string">"System services not available to Activities before onCreate()"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (WINDOW_SERVICE.equals(name)) &#123;</div><div class="line">        <span class="keyword">return</span> mWindowManager;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (SEARCH_SERVICE.equals(name)) &#123;</div><div class="line">        ensureSearchManager();</div><div class="line">        <span class="keyword">return</span> mSearchManager;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.getSystemService(name);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>继续追踪<code>super.getSystemService(name);</code><br><a href="https://github.com/android/platform_frameworks_base/blob/android-7.1.1_r6/core/java/android/view/ContextThemeWrapper.java#L164" target="_blank" rel="external">ContextThemeWrapper.java</a><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getSystemService</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (LAYOUT_INFLATER_SERVICE.equals(name)) &#123;</div><div class="line">        <span class="keyword">if</span> (mInflater == <span class="keyword">null</span>) &#123;</div><div class="line">            mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(<span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> mInflater;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> getBaseContext().getSystemService(name);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>看到了我们熟悉的<code>LAYOUT_INFLATER_SERVICE</code>，并且根据代码可以看到每个<code>Activity</code> 都会有一个自己独立的<code>mInflater</code> 属性。</p>
+<p>我们再来跟踪一下<code>ApplicationContext</code> 是怎么处理的<br>可以在<code>SystemServiceRegistry.java</code> 中看到服务的注册方式<br><a href="https://github.com/android/platform_frameworks_base/blob/android-7.1.1_r6/core/java/android/app/SystemServiceRegistry.java#L329" target="_blank" rel="external">SystemServiceRegistry.java</a><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//...</span></div><div class="line">registerService(Context.LAYOUT_INFLATER_SERVICE, LayoutInflater.class,</div><div class="line">                <span class="keyword">new</span> CachedServiceFetcher&lt;LayoutInflater&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> LayoutInflater <span class="title">createService</span><span class="params">(ContextImpl ctx)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> PhoneLayoutInflater(ctx.getOuterContext());</div><div class="line">    &#125;&#125;);</div></pre></td></tr></table></figure></p>
+<p>说白了是在整个app生命周期中会有一个原始的<code>LayoutInflater</code>对象，但是通过Activity创建的LayoutInflater对象中会持有<code>Activity</code>对象，这个context在创建<code>View</code> 的构造方法中传入，所以，在使用<code>LayoutInflater.from(context).inflate()</code> 创建出是如果要使用<code>view.getContext()</code> 与 <code>LayoutInflater.from(context)</code> 的context相同。</p>
 
                 <hr>
                 
                 <!-- 多说 Share start -->
                 <div class="ds-share"
                      style="text-align: right"
-                     data-thread-key="2016/12/24/android-strange-bug-part1/"
-                     data-title="Android遇到的奇怪bug"
-                     data-url="https://blog.zzzmode.com/2016/12/24/android-strange-bug-part1/"
+                     data-thread-key="2016/12/25/android-LayoutInflater/"
+                     data-title="Android LayoutInflater 探索"
+                     data-url="https://blog.zzzmode.com/2016/12/25/android-LayoutInflater/"
                      data-images=""
-                     data-content="最近遇到一个奇怪的bug关于界面布局在RecyclerView 中显示有问题，而且和系统版本有... | zzzmode&#39;s blog ">
+                     data-content="LayoutInflater.from(context) 是我们非常常用的方法，在Activi... | zzzmode&#39;s blog ">
                     <div class="ds-share-inline">
                         <ul class="ds-share-icons-16">
                             <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
@@ -215,15 +215,10 @@
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2016/12/25/android-LayoutInflater/" data-toggle="tooltip" data-placement="top"
-                           title="Android LayoutInflater 探索">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2016/11/22/charles-4.0.2-cracked/" data-toggle="tooltip" data-placement="top"
-                           title="Charles 4.0.2 破解">Next Post &rarr;</a>
+                        <a href="/2016/12/24/android-strange-bug-part1/" data-toggle="tooltip" data-placement="top"
+                           title="Android遇到的奇怪bug">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -232,9 +227,9 @@
                 <!-- 多说评论框 start -->
                 <div class="comment">
                     <div class="ds-thread"
-                         data-thread-key="2016/12/24/android-strange-bug-part1/"
-                         data-title="Android遇到的奇怪bug"
-                         data-url="https://blog.zzzmode.com/2016/12/24/android-strange-bug-part1/">
+                         data-thread-key="2016/12/25/android-LayoutInflater/"
+                         data-title="Android LayoutInflater 探索"
+                         data-url="https://blog.zzzmode.com/2016/12/25/android-LayoutInflater/">
                     </div>
                 </div>
                 <!-- 多说评论框 end -->
