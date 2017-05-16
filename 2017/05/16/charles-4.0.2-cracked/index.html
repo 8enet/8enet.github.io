@@ -185,7 +185,7 @@
 <hr>
 <h3 id="Charles-4-0-2"><a href="#Charles-4-0-2" class="headerlink" title="Charles 4.0.2"></a>Charles 4.0.2</h3><p>Charles 4.0.2 和之前版本的破解方式一样，直接上代码<br>先复制一份charles.jar出来，mac下的路径是<code>/Applications/Charles.app/Contents/Java/charles.jar</code> </p>
 <p>需要使用javassist修改字节码<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">compile &apos;org.javassist:javassist:3.20.0-GA&apos;</div></pre></td></tr></table></figure></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">classPool=ClassPool.getDefault();</div><div class="line">classPool.insertClassPath(<span class="string">"/path/charles.jar"</span>); <span class="comment">//复制出来charles.jar的文件路径</span></div><div class="line"></div><div class="line">CtClass ctClass = classPool.get(<span class="string">"com.xk72.charles.License"</span>);</div><div class="line">CtMethod ctMethod =ctClass.getDeclaredMethod(<span class="string">"a"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return true;&#125;"</span>);</div><div class="line">ctMethod = ctClass.getDeclaredMethod(<span class="string">"b"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return \"Regisered Name\";&#125;"</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">classPool=ClassPool.getDefault();</div><div class="line">classPool.insertClassPath(<span class="string">"/path/charles.jar"</span>); <span class="comment">//复制出来charles.jar的文件路径</span></div><div class="line"></div><div class="line">CtClass ctClass = classPool.get(<span class="string">"com.xk72.charles.License"</span>);</div><div class="line">CtMethod ctMethod =ctClass.getDeclaredMethod(<span class="string">"a"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return true;&#125;"</span>);</div><div class="line">ctMethod = ctClass.getDeclaredMethod(<span class="string">"b"</span>,<span class="keyword">null</span>);</div><div class="line">ctMethod.setBody(<span class="string">"&#123;return \"Regisered Name\";&#125;"</span>); </div><div class="line">ctClass.writeFile();</div></pre></td></tr></table></figure>
 <p>执行之后会生成 <code>com/xk72/charles/License.class</code> 文件<br>使用<code>jar uvf charles.jar com/xk72/charles/License.class</code> 命令将修改后的class打入jar包，注意jar和class的路径。</p>
 <hr>
 <blockquote>
@@ -193,28 +193,6 @@
 </blockquote>
 
                 <hr>
-                
-                <!-- 多说 Share start -->
-                <div class="ds-share"
-                     style="text-align: right"
-                     data-thread-key="2017/05/16/charles-4.0.2-cracked/"
-                     data-title="Charles 4.1.2 破解"
-                     data-url="https://blog.zzzmode.com/2017/05/16/charles-4.0.2-cracked/"
-                     data-images=""
-                     data-content="请支持正版，仅供技术交流。Charles 4.1.2Charles 4.1.2 和之前版本的破... | zzzmode&#39;s blog ">
-                    <div class="ds-share-inline">
-                        <ul class="ds-share-icons-16">
-                            <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
-                            <li><a class="ds-wechat flat" href="javascript:void(0);" data-service="wechat">微信</a></li>
-                            <li><a class="ds-weibo flat" href="javascript:void(0);" data-service="weibo">微博</a></li>
-                            <li><a class="ds-douban flat" href="javascript:void(0);" data-service="douban">豆瓣</a></li>
-                        </ul>
-                        <div class="ds-share-icons-more">
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-                <!-- 多说 Share end-->
                 
 
                 <ul class="pager">
@@ -228,17 +206,13 @@
                 </ul>
 
                 
-                <!-- 多说评论框 start -->
-                <div class="comment">
-                    <div class="ds-thread"
-                         data-thread-key="2017/05/16/charles-4.0.2-cracked/"
-                         data-title="Charles 4.1.2 破解"
-                         data-url="https://blog.zzzmode.com/2017/05/16/charles-4.0.2-cracked/">
-                    </div>
-                </div>
-                <!-- 多说评论框 end -->
-                
 
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
                 
 
             </div>
@@ -266,25 +240,23 @@
 </article>
 
 
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    // dynamic User by Hux
-    var _user = 'zzzmode';
 
-    // duoshuo comment query.
-    var duoshuoQuery = {short_name: _user};
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "blog-zzzmode";
+    var disqus_identifier = "https://blog.zzzmode.com/2017/05/16/charles-4.0.2-cracked/";
+    var disqus_url = "https://blog.zzzmode.com/2017/05/16/charles-4.0.2-cracked/";
+
     (function () {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';
-        ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-        || document.getElementsByTagName('body')[0]).appendChild(ds);
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
 </script>
-<!-- 多说公共JS代码 end -->
-
+<!-- disqus 公共JS代码 end -->
 
 
 
