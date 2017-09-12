@@ -22,7 +22,7 @@
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/tags/android/">
+    <link rel="canonical" href="https://blog.zzzmode.com/tags/Android/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -153,117 +153,18 @@
 
 <div class="post-preview "
      style="background-image: url('')">
-    <a href="/2016/12/25/android-LayoutInflater/">
+    <a href="/2017/07/27/modify_smali_code_part1/">
         <h2 class="post-title">
-            Android LayoutInflater 探索
+            修改smali插入代码(1)
         </h2>
         <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-12-25
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-07-27
         </p>
         
         <div class="post-content-preview">
             <p>
-                LayoutInflater.from(context) 是我们非常常用的方法，在Activity也可以调用getLayoutInflater()获取，可能这其中也有一些需要注意的地方。
-先运行下面一段代码，猜猜运行结果，这三个方法运行后得到的是同一个对象吗？public class MainA..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/12/24/android-strange-bug-part1/">
-        <h2 class="post-title">
-            Android遇到的奇怪bug
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-12-24
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                最近遇到一个奇怪的bug关于界面布局在RecyclerView 中显示有问题，而且和系统版本有关。直接上代码，简化版本的布局&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;RelativeLayout xml..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/10/22/android-unsatisfiedlinkerror-fix/">
-        <h2 class="post-title">
-            java.lang.UnsatisfiedLinkError 的解决办法
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-10-22
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                在实际开发中时不时的在部分手机上会出现一些  
-
-java.lang.UnsatisfiedLinkError: Couldn’t load solibrary from loader dalvik.system.PathClassLoader: findLibrary returned nul..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/05/28/android-roprop-modify/">
-        <h2 class="post-title">
-            Android修改ro.debuggable属性
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-05-28
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                首先得Root手机，改这个一般是为了方便调试应用，装有xposed框架的可以安装XInstaller模块达到通用的功能。
-一般情况下ro(read-only还是runtime object呢？)是不可以改的。像 /default.prop 是不能直接编辑的，即使修改了重启也会还原，必须解开boo..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/04/24/use-tencent-gt-test-app-smooth/">
-        <h2 class="post-title">
-            使用腾讯GT测试Android app流畅度
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-04-24
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                首先简单介绍下检测流畅度的原理:大家在看logcat的时候是不是有时候会看到这样的log
-
-Skipped 30 frames!  The application may be doing too much work on its main thread.
-
-输出这段log的是android.v..
+                本来想抓取酷安api接口，但是他们客户端使用了固定证书，导致无法抓包，okhttp方法具体使用方法可以参考Certificate Pinning https://github.com/square/okhttp/wiki/HTTPS
+首先准备在官网下载apk准备工具Android Studio,..
             </p>
         </div>
     </a>
