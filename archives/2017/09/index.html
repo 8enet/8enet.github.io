@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        修改smali插入代码(1)｜zzzmode&#39;s blog
+        zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2017/07/27/modify_smali_code_part1/">
+    <link rel="canonical" href="https://blog.zzzmode.com/archives/2017/09/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -43,7 +43,7 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
 " data-ishome = "false" >
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -124,135 +124,129 @@
 
 <!-- Main Content -->
 
-<!--only post-->
 
-
-<img class="wechat-title-img"
-     src="">
-
-
-<style>
-    
-    header.intro-header {
-        background-image: url('')
-    }
-
-    
-</style>
-
-<header class="intro-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
-                <div class="post-heading">
-                    <h1>修改smali插入代码(1)</h1>
-                    
-                    <span class="meta">
-                    
-                      作者 zzzz
-                    
-                        <span>
-                          日期 2017-07-27
-                         </span>
-                    </span>
-                    <div class="tags text-center">
-                        
-                        <a class="tag" href="/tags/#Android"
-                           title="Android">Android</a>
-                        
+<!-- Page Header -->
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 visible-xs-block visible-sm-block">
+    <div class="row">
+        <header class="intro-header">
+            <div class="container">
+                <div class="site-heading text-center">
+                    <div class="about-me">
+                        <!--移动端头部显示-->
+                        <img src="null"/>
+                        <h5><a href="/about/">Zheng Li</a></h5>
+                        <p>Write the Code. Change the World.</p>
                     </div>
                 </div>
             </div>
+        </header>
+    </div>
+</div>
+<!-- Main Content -->
+<div class="container custom-haojen-container">
+    <!-- Post Container -->
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12 col-xs-12 post-container">
+            <!-- Main Content -->
+
+
+
+<div class="post-preview "
+     style="background-image: url('')">
+    <a href="/2017/09/12/frida-android-hook/">
+        <h2 class="post-title">
+            Android中使用Frida hook方法
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-12
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                强大的动态注入框架 Frida，看官网介绍几乎支持所有平台，对ART的支持也不错，而且通过python脚本很方便的注入代码，我们看看在Android下如何使用，注意手机必须有Root权限。
+首先简单的看一遍官方文档，根据介绍先安装，依赖python3sudo pip install --user..
+            </p>
         </div>
-    </div>
-    <div class="post-title-haojen">
-        <span>
-            修改smali插入代码(1)
-        </span>
-    </div>
-</header>
+    </a>
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-            <!-- Post Container -->
-            <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>本来想抓取酷安api接口，但是他们客户端使用了固定证书，导致无法抓包，okhttp方法具体使用方法可以参考Certificate Pinning <a href="https://github.com/square/okhttp/wiki/HTTPS" target="_blank" rel="external">https://github.com/square/okhttp/wiki/HTTPS</a></p>
-<p>首先准备在官网下载apk<br>准备工具Android Studio, Apktool</p>
-<p>我已经写好了两个简单的脚本方便反编译和重新打包，<a href="https://github.com/8enet/shell-tools" target="_blank" rel="external">https://github.com/8enet/shell-tools</a><br>需要用到的脚本有decompile.sh(反编译) 和 rebuild.sh(重新打包编译)，先根据注释配置好apktool路径<br>同时需要framework-res.apk,请在android 7.0的手机上提取<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">adb  pull /system/framework/framework-res.apk</div><div class="line">#安装framework-res.apk</div><div class="line">./apktool if framework-res.apk</div></pre></td></tr></table></figure></p>
-<p> rebuild.sh 脚本用于重新打包并签名，签名需要一个keystore，可以通过keytool生成并修改其中的值</p>
-<p>先反编译一个试试<br>./decompile.sh app.apk</p>
-<p>成功后重新打包</p>
+</div>
 
-                <hr>
-                
+<hr>
 
-                <ul class="pager">
+
+
+
+<!-- 翻页 pager -->
+
+<ul class="pager">
+    
+    
+</ul>
+
+
+        </div>
+        <!-- Sidebar Container -->
+        <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+
+            <!-- About Me -->
+            <section class="visible-md visible-lg" style="padding: 0 18px">
+                <div class="short-about">
+                    <!--侧边栏头像-->
                     
+                    <h5><a href="/">Zheng Li</a></h5>
                     
-                    <li class="next">
-                        <a href="/2017/05/16/charles-4.0.2-cracked/" data-toggle="tooltip" data-placement="top"
-                           title="Charles 4.1.4 破解">Next Post &rarr;</a>
-                    </li>
+                    <p>Write the Code. Change the World.</p>
                     
-                </ul>
+                    <hr>
+                    <!-- SNS Link 社交 -->
+                    <ul class="list-inline">
+                        
+                        
+                        <li>
+                            <a target="_blank" href="https://twitter.com/8enet">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                        </span>
+                            </a>
+                        </li>
+                        
+                        
 
-                
+                        
 
-                
-                <!-- disqus 评论框 start -->
-                <div class="comment">
-                    <div id="disqus_thread" class="disqus-thread"></div>
+                        
+
+                        
+                        <li>
+                            <a target="_blank" href="https://github.com/8enet">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                            </a>
+                        </li>
+                        
+
+                        
+                    </ul>
                 </div>
-                <!-- disqus 评论框 end -->
-                
+            </section>
 
-            </div>
+            <!-- Featured Tags  标签 -->
+            
 
             
+
         </div>
-
-        <div class="row">
-            <!-- Sidebar Container -->
-
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
-
-                <!-- Featured Tags -->
-                
-
-                <!-- Friends Blog -->
-                
-            </div>
-        </div>
-
     </div>
-</article>
-
-
-
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "blog-zzzmode";
-    var disqus_identifier = "https://blog.zzzmode.com/2017/07/27/modify_smali_code_part1/";
-    var disqus_url = "https://blog.zzzmode.com/2017/07/27/modify_smali_code_part1/";
-
-    (function () {
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<!-- disqus 公共JS代码 end -->
-
-
-
+</div>
 
 <!-- Footer -->
 <!-- Footer -->

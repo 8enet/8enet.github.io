@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="zzzmode在 Github 上的个人博客">
+    <meta name="keyword" content="null">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="alternate" type="application/atom+xml" title="zzzmode" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Android中使用Frida hook方法｜zzzmode&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://blog.zzzmode.com/2017/09/12/frida-android-hook/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    zzzmode
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Android中使用Frida hook方法</h1>
+                    
+                    <span class="meta">
+                    
+                        <span>
+                          日期 2017-09-12
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#android"
+                           title="android">android</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Android中使用Frida hook方法
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-2 post-container">
+                <p>强大的动态注入框架 <a href="https://www.frida.re/" target="_blank" rel="external">Frida</a>，看官网介绍几乎支持所有平台，对ART的支持也不错，而且通过python脚本很方便的注入代码，我们看看在Android下如何使用，注意手机必须有Root权限。</p>
+<p>首先简单的看一遍<a href="https://www.frida.re/docs/home/" target="_blank" rel="external">官方文档</a>，根据介绍先安装，依赖python3<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo pip install --user frida</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>我使用的macOS，开始没有加sudo，安装完了一直没有frida-ps等命令出现，加上sudo就有了</p>
+</blockquote>
+<p>连接手机，到<a href="https://github.com/frida/frida/releases" target="_blank" rel="external">https://github.com/frida/frida/releases</a> 下载frida-server，根据情况选择android-arm 版本，<br>我下载的<a href="https://github.com/frida/frida/releases/download/10.5.14/frida-server-10.5.14-android-arm.xz" target="_blank" rel="external">https://github.com/frida/frida/releases/download/10.5.14/frida-server-10.5.14-android-arm.xz</a> 这个版本push到手机并启动<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">xz -d frida-server-10.5.14-android-arm.xz</div><div class="line">adb push frida-server-10.5.14-android-arm /data/local/tmp/</div><div class="line">adb shell &quot;chmod 755 /data/local/tmp/frida-server&quot;</div><div class="line"></div><div class="line"></div><div class="line">adb shell su -C &quot;/data/local/tmp/frida-server &amp;&quot; &amp;</div><div class="line">或者</div><div class="line">adb shell</div><div class="line">su</div><div class="line">cd /data/local/tmp</div><div class="line">./frida-server &amp;</div></pre></td></tr></table></figure></p>
+<p>然后在终端中执行<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">frida-ps -U</div></pre></td></tr></table></figure></p>
+<p>应该就会看到如下进程列表了<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">PID  Name</div><div class="line">-----  ----------</div><div class="line">30141  adbd</div><div class="line">23825  android.process.acore</div><div class="line">11070  android.process.media</div><div class="line">....</div></pre></td></tr></table></figure></p>
+<p>下面，我们根据 <a href="https://www.frida.re/docs/examples/android/" target="_blank" rel="external">https://www.frida.re/docs/examples/android/</a> 给出的示例来hook方法,<br>保存位 cty.py 代码如下<br><figure class="highlight python"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> frida, sys</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(message, data)</span>:</span></div><div class="line">    <span class="keyword">if</span> message[<span class="string">'type'</span>] == <span class="string">'send'</span>:</div><div class="line">        print(<span class="string">"[*] &#123;0&#125;"</span>.format(message[<span class="string">'payload'</span>]))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(message)</div><div class="line"></div><div class="line">jscode = <span class="string">"""</span></div><div class="line">Java.perform(function () &#123;</div><div class="line">    // Function to hook is defined here</div><div class="line">    // 要hook的类名</div><div class="line">    var MainActivity = Java.use('com.example.seccon2015.rock_paper_scissors.MainActivity');</div><div class="line"></div><div class="line">    // Whenever button is clicked</div><div class="line">    MainActivity.onClick.implementation = function (v) &#123;</div><div class="line">        // Show a message to know that the function got called</div><div class="line">        send('onClick');</div><div class="line"></div><div class="line">        // Call the original onClick handler</div><div class="line">        // 执行原始方法代码</div><div class="line">        this.onClick(v);</div><div class="line"></div><div class="line">        // Set our values after running the original onClick handler</div><div class="line">        //修改MainActivity中属性的值</div><div class="line">        this.m.value = 0;</div><div class="line">        this.n.value = 1;</div><div class="line">        this.cnt.value = 999;</div><div class="line"></div><div class="line">        // Log to the console that it's done, and we should have the flag!</div><div class="line">        console.log('Done:' + JSON.stringify(this.cnt));</div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="comment"># 要注入的进程名或者pid</span></div><div class="line"><span class="comment"># 方法可以参考https://github.com/frida/frida-python/blob/master/src/frida/core.py</span></div><div class="line">process = frida.get_usb_device().attach(<span class="string">'com.example.seccon2015.rock_paper_scissors'</span>)</div><div class="line">script = process.create_script(jscode)</div><div class="line">script.on(<span class="string">'message'</span>, on_message)</div><div class="line">print(<span class="string">'[*] Running CTF'</span>)</div><div class="line">script.load()</div><div class="line">sys.stdin.read()</div></pre></td></tr></table></figure></p>
+<p>注意修改进程名称和类名，然后执行<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">python3 cty.py</div></pre></td></tr></table></figure></p>
+<p>代码不多很简单，其实我们可以用这个作为模板，只需要修改进程名和jscode就可以了。<br>下面是几个常用的示例<br><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"></div><div class="line">Java.perform(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">var</span> Activity = Java.use(<span class="string">'android.app.Activity'</span>);</div><div class="line"><span class="keyword">var</span> Toast = Java.use(<span class="string">'android.widget.Toast'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Bundle = Java.use(<span class="string">'android.os.Bundle'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> PackageInfo = Java.use(<span class="string">'android.content.pm.PackageInfo'</span>);</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//得到context</span></div><div class="line"><span class="keyword">var</span> currentApplication = Java.use(<span class="string">'android.app.ActivityThread'</span>).currentApplication();</div><div class="line"><span class="keyword">var</span> context = currentApplication.getApplicationContext();</div><div class="line"></div><div class="line"><span class="comment">// hook所有activity的onResume方法</span></div><div class="line">Activity.onResume.implementation = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'onResume --&gt; '</span>+<span class="keyword">this</span>);</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'onResume --&gt; context '</span>+context);</div><div class="line">	<span class="keyword">this</span>.onResume();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// hook所有activity的onCreate方法，因为onCreate方法有多种参数，所以需要指定参数类型来确定要hook的方法</span></div><div class="line">Activity.onCreate.overload(<span class="string">'android.os.Bundle'</span>).implementation = <span class="function"><span class="keyword">function</span> (<span class="params">c</span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'onCreate --&gt; '</span>+<span class="keyword">this</span>);</div><div class="line">	<span class="keyword">this</span>.onCreate(c);</div><div class="line"></div><div class="line"><span class="comment">//1.调用静态方法，首先使用Java.use，后面makeText方法的参数保持一致</span></div><div class="line"><span class="comment">//Toast.makeText(this,"onCreate",Toast.LENGTH_SHORT).show();</span></div><div class="line">Toast.makeText(<span class="keyword">this</span>,<span class="string">"onCreate ----"</span>,Toast.LENGTH_SHORT.value).show();</div><div class="line"></div><div class="line"><span class="comment">//2. 读取静态属性</span></div><div class="line"><span class="comment">//int code = Activity.RESULT_OK;</span></div><div class="line"><span class="keyword">var</span> code = Activity.RESULT_OK.value</div><div class="line"></div><div class="line"><span class="comment">//3.调用实例方法，并new一个对象</span></div><div class="line"><span class="comment">//在intent中添加一个bundle</span></div><div class="line"><span class="comment">//Bundle bundle=new Bundle();</span></div><div class="line"><span class="comment">//bundle.putString("key1","value1");</span></div><div class="line"><span class="comment">// activity.getIntent().putExtra("testBundle",bundle);</span></div><div class="line"><span class="keyword">var</span> bundle = Bundle.$<span class="keyword">new</span>();</div><div class="line"><span class="comment">//调用实例方法需要使用call</span></div><div class="line">Bundle.putString.call(bundle,<span class="string">'key1'</span>,<span class="string">'value1'</span>)</div><div class="line"><span class="comment">//也可以指定具体的参数类型</span></div><div class="line"><span class="comment">//Bundle.putString.overload('java.lang.String','java.lang.String').call(bundle,'key1','value1')</span></div><div class="line"><span class="keyword">this</span>.getIntent().putExtra(<span class="string">'testBundle'</span>,bundle)</div><div class="line"></div><div class="line"><span class="comment">//activity.getIntent().getBundleExtra("testBundle");</span></div><div class="line"><span class="keyword">var</span> outB = <span class="keyword">this</span>.getIntent().getBundleExtra(<span class="string">'testBundle'</span>)</div><div class="line"><span class="built_in">console</span>.log(outB);</div><div class="line"></div><div class="line"><span class="comment">//4.读取实例对象的属性值，对于得到的对象，需要使用Java.cast()方法转换后才可以使用</span></div><div class="line"><span class="comment">// PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(),0);</span></div><div class="line"><span class="comment">// String pkg = packageInfo.packageName;</span></div><div class="line"><span class="keyword">var</span> t = <span class="keyword">this</span>.getPackageManager().getPackageInfo(<span class="keyword">this</span>.getPackageName(),<span class="number">0</span>);</div><div class="line"><span class="keyword">var</span> packageInfo = Java.cast(t.$handle, PackageInfo);</div><div class="line"><span class="keyword">var</span> pkg = packageInfo.packageName.value</div><div class="line"><span class="built_in">console</span>.log(pkg)</div><div class="line"></div><div class="line">&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>参数类型注意事项</p>
+<ul>
+<li>基本类型可以简写，比如byte -&gt; B, int -&gt; I, boolean -&gt; Z …</li>
+<li>对于数组类型，可以添加前缀<code>[</code>，例如int[] -&gt; [I, String[] -&gt; [Ljava.lang.String</li>
+<li>泛型在编译后会擦除，所以在使用时不需要加泛型类型<br>具体简写类型可以参考<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.3.2" target="_blank" rel="external">JVM规范</a></li>
+</ul>
+<p>更多java api可以通过<a href="https://github.com/frida/frida-java/blob/master/index.js" target="_blank" rel="external">https://github.com/frida/frida-java/blob/master/index.js</a> 找到<br>比如<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//获取android版本号,比如 7.1.1</div><div class="line">Java.androidVersion</div><div class="line">//是否在主线程</div><div class="line">Java.isMainThread()</div><div class="line"></div><div class="line"></div><div class="line">Java.scheduleOnMainThread(function () &#123; </div><div class="line">    send(&apos;main thread&apos;);	</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>对Frida的介绍不多，</p>
+<p>参考<br><a href="https://github.com/frida/frida" target="_blank" rel="external">https://github.com/frida/frida</a><br><a href="https://github.com/frida/frida-python" target="_blank" rel="external">https://github.com/frida/frida-python</a><br><a href="https://github.com/frida/frida-java" target="_blank" rel="external">https://github.com/frida/frida-java</a><br><a href="https://github.com/dweinstein/awesome-frida" target="_blank" rel="external">https://github.com/dweinstein/awesome-frida</a><br><a href="http://www.jianshu.com/p/ca8381d3e094" target="_blank" rel="external">http://www.jianshu.com/p/ca8381d3e094</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/05/16/charles-4.0.2-cracked/" data-toggle="tooltip" data-placement="top"
+                           title="Charles 4.1.4 破解">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+
+            
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "blog-zzzmode";
+    var disqus_identifier = "https://blog.zzzmode.com/2017/09/12/frida-android-hook/";
+    var disqus_url = "https://blog.zzzmode.com/2017/09/12/frida-android-hook/";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/8enet">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/8enet">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; zzzmode 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <!-- Theme by <a href="https://haojen.github.io/">Haojen Ma</a> -->
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("//js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-76336437-1';
+    var _gaDomain = 'auto';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+<script>
+    var _baId = 'bcaf2d2592555e2860b1c0c14f5a911f';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+</body>
+
+</html>
