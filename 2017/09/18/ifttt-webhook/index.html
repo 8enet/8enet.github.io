@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        使用IFTTT推送通知｜zzzmode&#39;s blog
+        使用IFTTT推送显示通知｜zzzmode&#39;s blog
         
     </title>
 
@@ -145,7 +145,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>使用IFTTT推送通知</h1>
+                    <h1>使用IFTTT推送显示通知</h1>
                     
                     <span class="meta">
                     
@@ -171,7 +171,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            使用IFTTT推送通知
+            使用IFTTT推送显示通知
         </span>
     </div>
 </header>
@@ -183,16 +183,17 @@
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
                 <p>最近使用 <a href="https://github.com/binux/qiandao" target="_blank" rel="external">https://github.com/binux/qiandao</a> 大神写的自动签到，但是一般情况下签到没有提示，需要登录网站查看才可以看到今天什么时候签到了以及签到结果，所有想添加一个自动推送签到结果的提醒。<br>本来是想用firebase专门写一个应用接收自己的推送，但是感觉又有点小题大做了，一直听说IFTTT很强大，安装了但是没怎么用，这个需求也恰好很类似，所以试试这个神器怎么用。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">if(qiandao_success)&#123;</div><div class="line">	then &#123;show notification&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>修改了部分代码，已添加ifttt支持<a href="https://github.com/8enet/qiandao" target="_blank" rel="external">https://github.com/8enet/qiandao</a></p>
 <p>我们只需要连接 <a href="https://ifttt.com/maker_webhooks" target="_blank" rel="external">https://ifttt.com/maker_webhooks</a> 和 <a href="https://ifttt.com/services/if_notifications" target="_blank" rel="external">https://ifttt.com/services/if_notifications</a> 这两个服务即可，比如请求签到结果发送到webhooks然后显示通知即可。</p>
 <ol>
 <li>首先新建一个Applets <a href="https://ifttt.com/create" target="_blank" rel="external">https://ifttt.com/create</a><br><img src="/images/android/ifttt.gif" alt="IFTTT create"></li>
 <li><p>查看推送地址 <a href="https://ifttt.com/maker_webhooks" target="_blank" rel="external">https://ifttt.com/maker_webhooks</a> 点击右上角的Documentation 进入到接口api界面，就可以看到类似的请求地址，比如 <code>https://maker.ifttt.com/trigger/{event}/with/key/your_key</code><br>其中{event} 替换成我们刚才新建的myqiandao即可，可以使用3个值，分别是<code>value1</code>, <code>value2</code>和<code>value3</code>然后下面有个 Test It 的按钮来测试一下是否会收到通知，建议复制到终端来修改{event}为myqiandao后来测试<br><img src="/images/android/ifttt-curl.png" alt="IFTTT Crul"><br><img src="/images/android/ifttt-notification.png" alt="IFTTT Android Notifications"></p>
 </li>
-<li><p>最后只要在签到成功和失败的时候请求接口即可，简单使用requests几行代码</p>
+<li><p>最后只要在签到成功和失败的时候请求接口即可，使用requests几行代码实现</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><div class="line">localtime = time.strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>, time.localtime())</div><div class="line">data = &#123;<span class="string">"value1"</span>: <span class="string">"贴吧签到成功！"</span>, <span class="string">"value2"</span>: localtime&#125;</div><div class="line">r = requests.post(<span class="string">'https://maker.ifttt.com/trigger/myqiandao/with/key/your_key'</span>, json=data,</div><div class="line">                  headers=&#123;<span class="string">'Connection'</span>: <span class="string">'close'</span>&#125;, timeout=<span class="number">180</span>)</div><div class="line">print(r.headers)</div><div class="line">print(r.content)</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>非常轻松的实现了需求，最后ifttt还有很多非常帮的玩法，期待深入挖掘！</p>
+<p>非常轻松的实现了需求，最后IFTTT还有很多非常棒的玩法，期待深入使用！</p>
 
                 <hr>
                 
