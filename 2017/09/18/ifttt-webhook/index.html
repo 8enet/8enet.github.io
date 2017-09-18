@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        zzzmode&#39;s blog
+        使用IFTTT推送通知｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/archives/2016/04/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2017/09/18/ifttt-webhook/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -43,7 +43,7 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
 " data-ishome = "false" >
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -124,182 +124,144 @@
 
 <!-- Main Content -->
 
+<!--only post-->
 
-<!-- Page Header -->
-<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 visible-xs-block visible-sm-block">
-    <div class="row">
-        <header class="intro-header">
-            <div class="container">
-                <div class="site-heading text-center">
-                    <div class="about-me">
-                        <!--移动端头部显示-->
-                        <img src="null"/>
-                        <h5><a href="/about/">Zheng Li</a></h5>
-                        <p>Android developer</p>
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>使用IFTTT推送通知</h1>
+                    
+                    <span class="meta">
+                    
+                        <span>
+                          日期 2017-09-18
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#android"
+                           title="android">android</a>
+                        
+                        <a class="tag" href="/tags/#ifttt"
+                           title="ifttt">ifttt</a>
+                        
+                        <a class="tag" href="/tags/#webhook"
+                           title="webhook">webhook</a>
+                        
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
     </div>
-</div>
-<!-- Main Content -->
-<div class="container custom-haojen-container">
-    <!-- Post Container -->
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12 col-xs-12 post-container">
-            <!-- Main Content -->
+    <div class="post-title-haojen">
+        <span>
+            使用IFTTT推送通知
+        </span>
+    </div>
+</header>
 
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-2 post-container">
+                <p>最近使用 <a href="https://github.com/binux/qiandao" target="_blank" rel="external">https://github.com/binux/qiandao</a> 大神写的自动签到，但是一般情况下签到没有提示，需要登录网站查看才可以看到今天什么时候签到了以及签到结果，所有想添加一个自动推送签到结果的提醒。<br>本来是想用firebase专门写一个应用接收自己的推送，但是感觉又有点小题大做了，一直听说IFTTT很强大，安装了但是没怎么用，这个需求也恰好很类似，所以试试这个神器怎么用。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">if(qiandao_success)&#123;</div><div class="line">	then &#123;show notification&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们只需要连接 <a href="https://ifttt.com/maker_webhooks" target="_blank" rel="external">https://ifttt.com/maker_webhooks</a> 和 <a href="https://ifttt.com/services/if_notifications" target="_blank" rel="external">https://ifttt.com/services/if_notifications</a> 这两个服务即可，比如请求签到结果发送到webhooks然后显示通知即可。</p>
+<ol>
+<li>首先新建一个Applets <a href="https://ifttt.com/create" target="_blank" rel="external">https://ifttt.com/create</a><br><img src="/images/android/ifttt.gif" alt="IFTTT create"></li>
+<li><p>查看推送地址 <a href="https://ifttt.com/maker_webhooks" target="_blank" rel="external">https://ifttt.com/maker_webhooks</a> 点击右上角的Documentation 进入到接口api界面，就可以看到类似的请求地址，比如 <code>https://maker.ifttt.com/trigger/{event}/with/key/your_key</code><br>其中{event} 替换成我们刚才新建的myqiandao即可，可以使用3个值，分别是<code>value1</code>, <code>value2</code>和<code>value3</code>然后下面有个 Test It 的按钮来测试一下是否会收到通知，建议复制到终端来修改{event}为myqiandao后来测试<br><img src="/images/android/ifttt-curl.png" alt="IFTTT Crul"><br><img src="/images/android/ifttt-notification.png" alt="IFTTT Android Notifications"></p>
+</li>
+<li><p>最后只要在签到成功和失败的时候请求接口即可，简单使用requests几行代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><div class="line">localtime = time.strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>, time.localtime())</div><div class="line">data = &#123;<span class="string">"value1"</span>: <span class="string">"贴吧签到成功！"</span>, <span class="string">"value2"</span>: localtime&#125;</div><div class="line">r = requests.post(<span class="string">'https://maker.ifttt.com/trigger/myqiandao/with/key/your_key'</span>, json=data,</div><div class="line">                  headers=&#123;<span class="string">'Connection'</span>: <span class="string">'close'</span>&#125;, timeout=<span class="number">180</span>)</div><div class="line">print(r.headers)</div><div class="line">print(r.content)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>非常轻松的实现了需求，最后ifttt还有很多非常帮的玩法，期待深入挖掘！</p>
 
+                <hr>
+                
 
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/04/24/use-tencent-gt-test-app-smooth/">
-        <h2 class="post-title">
-            使用腾讯GT测试Android app流畅度
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-04-24
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                首先简单介绍下检测流畅度的原理:大家在看logcat的时候是不是有时候会看到这样的log
-
-Skipped 30 frames!  The application may be doing too much work on its main thread.
-
-输出这段log的是android.v..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/04/15/docker-mongodb-redis-config/">
-        <h2 class="post-title">
-            在docker容器中使用mongodb和redis
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-04-15
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                在一个Dockerfile 中同时配置mongodb,redis和ssh直接上代码
-Dockerfile 文件
-FROM ubuntu:14.04MAINTAINER ZHENGLI &lt;zlcn2200@yeah.net&gt;ENV DEBIAN_FRONTEND noninteract..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('')">
-    <a href="/2016/04/13/myblog-config/">
-        <h2 class="post-title">
-            github blog 配置
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2016-04-13
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                首先默认已经创建好 username.github.io resp 并且本地安装好jekyll.
-1、使用模板可以直接fork 本项目, https://github.com/8enet/8enet.github.io
-git clone https://github.com/8enet/8en..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-
-<!-- 翻页 pager -->
-
-<ul class="pager">
-    
-    
-</ul>
-
-
-        </div>
-        <!-- Sidebar Container -->
-        <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
-
-            <!-- About Me -->
-            <section class="visible-md visible-lg" style="padding: 0 18px">
-                <div class="short-about">
-                    <!--侧边栏头像-->
+                <ul class="pager">
                     
-                    <h5><a href="/">Zheng Li</a></h5>
                     
-                    <p>Android developer</p>
+                    <li class="next">
+                        <a href="/2017/09/12/frida-android-hook/" data-toggle="tooltip" data-placement="top"
+                           title="Android中使用Frida hook方法">Next Post &rarr;</a>
+                    </li>
                     
-                    <hr>
-                    <!-- SNS Link 社交 -->
-                    <ul class="list-inline">
-                        
-                        
-                        <li>
-                            <a target="_blank" href="https://twitter.com/8enet">
-                                        <span class="fa-stack fa-lg">
-                                            <i class="fa fa-circle fa-stack-2x"></i>
-                                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                                        </span>
-                            </a>
-                        </li>
-                        
-                        
+                </ul>
 
-                        
+                
 
-                        
-
-                        
-                        <li>
-                            <a target="_blank" href="https://github.com/8enet">
-                                        <span class="fa-stack fa-lg">
-                                            <i class="fa fa-circle fa-stack-2x"></i>
-                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                        </span>
-                            </a>
-                        </li>
-                        
-
-                        
-                    </ul>
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
                 </div>
-            </section>
+                <!-- disqus 评论框 end -->
+                
 
-            <!-- Featured Tags  标签 -->
+            </div>
+
             
-
-            
-
         </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
     </div>
-</div>
+</article>
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "blog-zzzmode";
+    var disqus_identifier = "https://blog.zzzmode.com/2017/09/18/ifttt-webhook/";
+    var disqus_url = "https://blog.zzzmode.com/2017/09/18/ifttt-webhook/";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
 
 <!-- Footer -->
 <!-- Footer -->
