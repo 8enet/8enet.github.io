@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        2017上海 Google Developer Days｜zzzmode&#39;s blog
+        使用dnsmasq搭建DNS Server｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2017/12/15/2017-shanghai-gdd/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -145,18 +145,21 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>2017上海 Google Developer Days</h1>
+                    <h1>使用dnsmasq搭建DNS Server</h1>
                     
                     <span class="meta">
                     
                         <span>
-                          日期 2017-12-15
+                          日期 2018-03-31
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#android"
-                           title="android">android</a>
+                        <a class="tag" href="/tags/#linux"
+                           title="linux">linux</a>
+                        
+                        <a class="tag" href="/tags/#dnsmasq"
+                           title="dnsmasq">dnsmasq</a>
                         
                     </div>
                 </div>
@@ -165,7 +168,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            2017上海 Google Developer Days
+            使用dnsmasq搭建DNS Server
         </span>
     </div>
 </header>
@@ -176,37 +179,38 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>今年很有幸参加了2017上海GDD开发者大会，一天活动很多但是也非常值得。<br>大约在一个多月前在微博和google开发者公众号看到今年的GDD活动，当时很期待的提交了申请，然后非常荣幸的收到了大会的邀请函！</p>
-<p>12月13日，早上7点多起床，天气很不错，骑车过去。在最近的大渡河路地铁站路口还有GDD工作人员指引接待。<br><img src="/images/gdd2017/IMG_20171213_080615.jpg" alt="入场"></p>
-<p>过完安检，装饰后的广场<br><img src="/images/gdd2017/IMG_20171213_080752.jpg" alt="广场"></p>
-<p>进去签到<br><img src="/images/gdd2017/IMG_20171213_080905.jpg" alt="签到"></p>
-<p>根据邮件里面的邀请函二维码签到，每人领一个袋子里面有个DIY音箱.</p>
-<p>8:30 进入主会场，英语好不可以用身份证领取一个同声翻译耳机。<br><img src="/images/gdd2017/IMG_20171213_083104.jpg" alt="主会场"><br>去的比较早，选了个靠前的位置，第一排是预留给演讲嘉宾和部分学生的</p>
-<p>人差不多进场后开始预热活动，气氛搞起来！<br><img src="/images/gdd2017/IMG_20171213_092218.jpg" alt="Google AI"><br>主要是Google AI智能识别，然后播放视频讲述很炫酷的功能。</p>
-<p>之后就是Google大中华区高层的演讲。</p>
-<p>大厅里有很多好玩的项目，还有礼品送<br><img src="/images/gdd2017/IMG_20171213_144240.jpg" alt="大厅"><br><img src="/images/gdd2017/IMG_20171213_164138.jpg" alt="大厅"></p>
-<p>两天的会议活动，免费吃喝还有大礼包！<br><img src="/images/gdd2017/IMG_20171213_120235.jpg" alt="吃"><br><img src="/images/gdd2017/IMG_20171213_120545.jpg" alt="吃"></p>
-<p>会议活动，每场都是爆满，后来很多人没有听到还加场了。<br><img src="/images/gdd2017/IMG_20171213_124316.jpg" alt="议程"><br><img src="/images/gdd2017/IMG_20171213_172653.jpg" alt="议程"><br><img src="/images/gdd2017/IMG_20171213_181549.jpg" alt="议程"></p>
-<p>晚上还有After Party晚宴，有乐队，游戏机，食物酒水，气氛很活跃<br><img src="/images/gdd2017/IMG_20171213_190725.jpg" alt="晚宴"><br><img src="/images/gdd2017/IMG_20171213_193626.jpg" alt="晚宴"></p>
-<p>吃饱喝足，收货满满，非常感谢Google提供了一个对国内开发者友好互动的平台<br><img src="/images/gdd2017/IMG_20171213_194156.jpg" alt="回家"></p>
-<p>一天的行程结束，活动福利很多，分享的也都是时下前言热门的技术。<br><img src="/images/gdd2017/IMG_20171213_200154.jpg" alt="活动福利"></p>
-<p>Android Things开发版、2017GDD电脑包、DIY音箱、android抱枕等等很多小东西。</p>
-<p>活动很给力，非常期待 2018 GDD 上海再见！ </p>
+                <p>前段时间腾讯云活动撸了个1核2G内存云服务器，上海二区使用上海电信ping值不超过8ms左右，但带宽只有1M，适合玩玩，想着搭建一个自用DNS服务器。</p>
+<p>按照网上的很多文章，都是直接用<code>apt install dnsmasq</code> 安装的，我这样安装后死活不行，最多本地解析可以，而且会自动替换成本地dns服务器，简单看来下是启动脚本改的，我的目的只想开放53端口对外服务就可以，但是外网就是不可以，nmap可以扫描的udp53端口是打开着的，始终不通，所有放弃，最后自己编译安装dnsmasq。</p>
+<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><p>服务器环境 Ubuntu 16.04.4 LTS，其他发行版可能有所差别。<br>先安装一些依赖库，可能不完整<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">apt update</div><div class="line">apt install nettle-dev pkg-config</div></pre></td></tr></table></figure></p>
+<p>下载源代码解压<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">wget http://www.thekelleys.org.uk/dnsmasq/dnsmasq-2.79.tar.gz</div><div class="line">tar vxzf dnsmasq-2.79.tar.gz</div><div class="line"><span class="built_in">cd</span> dnsmasq-2.79</div><div class="line"></div><div class="line">make </div><div class="line">make install</div></pre></td></tr></table></figure></p>
+<p>生成的二进制文件在<code>/usr/local/sbin/dnsmasq</code></p>
+<p>如果需要开启DNSSEC功能，按照文档提示使用<br><code>make COPTS=-DHAVE_DNSSEC</code> 这样就可以，但是编译报错。<br>还可以手动修改<code>src/config.h</code> 文件，把<code>/* #define HAVE_DNSSEC */</code> 这一行的注释去掉也行。<br>编译成功后执行<code>dnsmasq -v</code> 就会看到已经启用DNSSEC<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Dnsmasq version 2.79  Copyright (c) 2000-2018 Simon Kelley</div><div class="line">Compile time options: IPv6 GNU-getopt no-DBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack ipset auth DNSSEC loop-detect inotify</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>创建<code>/etc/dnsmasq.conf</code> 配置文件，dnsmasq会默认读取此文件，有关配置的详细文档查看 <a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="external">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><code>/etc/dnsmasq.conf</code><br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">bogus-priv</div><div class="line">domain-needed</div><div class="line"></div><div class="line">#不自动同步文件更改</div><div class="line">no-poll</div><div class="line"></div><div class="line">#上游配置</div><div class="line">resolv-file=/etc/resolv.dnsmasq.conf</div><div class="line"></div><div class="line">#按顺序从上游dns查找</div><div class="line">strict-order</div><div class="line"></div><div class="line">#dns缓存大小</div><div class="line">cache-size=1000</div><div class="line"></div><div class="line">#如果想启用dnssec请配置添加下面配置，不用就删掉</div><div class="line">dnssec</div><div class="line">trust-anchor=.,19036,8,2,49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5</div><div class="line">trust-anchor=.,20326,8,2,E06D44B80B8F1D39A95C0B0D7C65D08458E880409BBC683457104237C7F8EC8D</div><div class="line">dnssec-check-unsigned</div></pre></td></tr></table></figure></p>
+<p>继续新建<code>/etc/resolv.dnsmasq.conf</code> 文件，配置上游dns服务，会按顺序解析，根据喜好自行选择配置。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">nameserver 8.8.8.8</div><div class="line">nameserver 119.29.29.29</div><div class="line">nameserver 114.114.114.114</div></pre></td></tr></table></figure></p>
+<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">以前台调试模式运行，会输出查询日志</div><div class="line">dnsmasq -d -q</div></pre></td></tr></table></figure>
+<p>然后我们登录另一个终端使用<code>dig</code>命令解析<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">dig qq.com @127.0.0.1</div></pre></td></tr></table></figure></p>
+<p>输出类似如下，表示dns服务已经搭建成功<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">dnsmasq: query[A] qq.com from 127.0.0.1</div><div class="line">dnsmasq: forwarded qq.com to 119.29.29.29</div><div class="line">dnsmasq: reply qq.com is 125.39.240.113</div><div class="line">dnsmasq: reply qq.com is 61.135.157.156</div></pre></td></tr></table></figure></p>
+<p>现在在你本机使用 <code>dig qq.com @your_server_public_ip</code> 也可以解析到了。</p>
+<p>开机启动和守护进程管理可以通过<code>Supervisor</code> 启动<br><code>/etc/supervisor/conf.d/dnsmasq.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[program:dnsmasq]</div><div class="line">command=/usr/local/sbin/dnsmasq -k </div><div class="line">autorestart=false</div><div class="line">user=root</div></pre></td></tr></table></figure>
+<blockquote>
+<p>如果要输出dnsmasq日志做后续分析，加上<code>-q</code>参数，日志输出到了<code>/var/log/syslog</code> 文件中，可以通过<code>journalctl -f</code> 查看实时输出的日志</p>
+</blockquote>
+<p>然后supervisor更新一下<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl update</div><div class="line">supervisorctl status</div><div class="line"></div><div class="line">输出</div><div class="line">...</div><div class="line">dnsmasq                          RUNNING   pid 13035, uptime 0:04:18</div></pre></td></tr></table></figure></p>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>此时 dnsmasq 已经在正常运行，可以设置电脑dns server为自己服务器ip了，但是解析国内地址访问不太理想。<br>借助dnsmasq-china-list项目的dns配置加速解析，默认使用的是<code>114.114.114.114</code>解析国内域名，可以通过项目自带的<code>dnsmasq-update-china-list</code> 脚本替换为其他的dns服务器。<br>手动安装，更多用法查看项目说明<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/dnsmasq.d</div><div class="line">wget -P /etc/dnsmasq.d https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf</div></pre></td></tr></table></figure></p>
+<p>修改<code>/etc/dnsmasq.conf</code> 配置文件，在后面添加一行<code>conf-dir=/etc/dnsmasq.d</code></p>
+<p>重启dnsmasq生效<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl restart dnsmasq</div></pre></td></tr></table></figure></p>
+<p>参考:<br><a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="external">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><a href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions" target="_blank" rel="external">https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions</a><br><a href="https://github.com/felixonmars/dnsmasq-china-list/" target="_blank" rel="external">https://github.com/felixonmars/dnsmasq-china-list/</a></p>
 
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2018/03/31/dnsmasq-dns-server/" data-toggle="tooltip" data-placement="top"
-                           title="使用dnsmasq搭建DNS Server">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2017/09/18/ifttt-webhook/" data-toggle="tooltip" data-placement="top"
-                           title="使用IFTTT推送显示通知">Next Post &rarr;</a>
+                        <a href="/2017/12/15/2017-shanghai-gdd/" data-toggle="tooltip" data-placement="top"
+                           title="2017上海 Google Developer Days">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -251,8 +255,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "blog-zzzmode";
-    var disqus_identifier = "https://blog.zzzmode.com/2017/12/15/2017-shanghai-gdd/";
-    var disqus_url = "https://blog.zzzmode.com/2017/12/15/2017-shanghai-gdd/";
+    var disqus_identifier = "https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/";
+    var disqus_url = "https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/";
 
     (function () {
         var dsq = document.createElement('script');
