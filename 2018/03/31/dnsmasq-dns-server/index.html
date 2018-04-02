@@ -205,7 +205,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/dnsmasq.d</div><div class="line">wget -P /etc/dnsmasq.d https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf</div></pre></td></tr></table></figure>
 <p>修改<code>/etc/dnsmasq.conf</code> 配置文件，在后面添加一行<code>conf-dir=/etc/dnsmasq.d</code></p>
 </li>
-<li><p>使用EDNS-CLIENT-SUBNET 优化自用线路<br>建议使用阿里公共DNS <code>223.5.5.5</code></p>
+<li><p>使用EDNS-CLIENT-SUBNET 优化自用线路<br>建议使用阿里公共DNS <code>223.5.5.5</code> 解析速度比较理想。</p>
 </li>
 </ul>
 <p>最后重启dnsmasq生效<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl restart dnsmasq</div></pre></td></tr></table></figure></p>
