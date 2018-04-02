@@ -149,6 +149,8 @@
                     
                     <span class="meta">
                     
+                      作者 zzzmode
+                    
                         <span>
                           日期 2018-03-31
                          </span>
@@ -197,9 +199,17 @@
 <p>如果要输出dnsmasq日志做后续分析，加上<code>-q</code>参数，日志输出到了<code>/var/log/syslog</code> 文件中，可以通过<code>journalctl -f</code> 查看实时输出的日志</p>
 </blockquote>
 <p>然后supervisor更新一下<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl update</div><div class="line">supervisorctl status</div><div class="line"></div><div class="line">输出</div><div class="line">...</div><div class="line">dnsmasq                          RUNNING   pid 13035, uptime 0:04:18</div></pre></td></tr></table></figure></p>
-<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>此时 dnsmasq 已经在正常运行，可以设置电脑dns server为自己服务器ip了，但是解析国内地址访问不太理想。<br>借助dnsmasq-china-list项目的dns配置加速解析，默认使用的是<code>114.114.114.114</code>解析国内域名，可以通过项目自带的<code>dnsmasq-update-china-list</code> 脚本替换为其他的dns服务器。<br>手动安装，更多用法查看项目说明<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/dnsmasq.d</div><div class="line">wget -P /etc/dnsmasq.d https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf</div></pre></td></tr></table></figure></p>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>此时 dnsmasq 已经在正常运行，可以设置电脑dns server为自己服务器ip了，但是解析国内地址访问不太理想。</p>
+<ul>
+<li><p>借助dnsmasq-china-list项目的dns配置加速解析，默认使用的是<code>114.114.114.114</code>解析国内域名，可以通过项目自带的<code>dnsmasq-update-china-list</code> 脚本替换为其他的dns服务器。<br>手动安装，更多用法查看项目说明</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/dnsmasq.d</div><div class="line">wget -P /etc/dnsmasq.d https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf</div></pre></td></tr></table></figure>
 <p>修改<code>/etc/dnsmasq.conf</code> 配置文件，在后面添加一行<code>conf-dir=/etc/dnsmasq.d</code></p>
-<p>重启dnsmasq生效<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl restart dnsmasq</div></pre></td></tr></table></figure></p>
+</li>
+<li><p>使用EDNS-CLIENT-SUBNET 优化自用线路<br>根据自用的ip，调整 <code>add-subnet</code> 参数，修改<code>/etc/dnsmasq.conf</code>文件，添加<code>add-subnet=your_client_ip/24</code> 这样的参数优化解析</p>
+</li>
+</ul>
+<p>最后重启dnsmasq生效<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl restart dnsmasq</div></pre></td></tr></table></figure></p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p><a href="http://tools.cloudxns.net/index.php/Index/Diag" target="_blank" rel="external">http://tools.cloudxns.net/index.php/Index/Diag</a></p>
 <p>参考:<br><a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="external">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><a href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions" target="_blank" rel="external">https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions</a><br><a href="https://github.com/felixonmars/dnsmasq-china-list/" target="_blank" rel="external">https://github.com/felixonmars/dnsmasq-china-list/</a></p>
 
                 <hr>
