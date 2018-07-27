@@ -198,7 +198,14 @@
 <li>没有访问修饰符，默认都是<code>public</code>,如果类名方法属性等前面加上<code>_</code>则表示<code>private</code>，有点类似Python</li>
 <li>方法前不需要关键字修饰，可以不写返回值类似</li>
 </ul>
-<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line">_foo()&#123;</div><div class="line"><span class="comment">//private 私有方法</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">String</span> bar()&#123;</div><div class="line"><span class="comment">//对于public方法，建议明确指名返回值类型</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">* 单线程，使用`<span class="keyword">await</span>` 和 `<span class="keyword">async</span>` 异步处理</div><div class="line">* 使用`<span class="keyword">dynamic</span>`关键字表示动态类型</div><div class="line"></div><div class="line">##### <span class="built_in">Null</span> Safety</div><div class="line">Dart和Kotlin一样，可以使用`?`操作符检测<span class="built_in">Null</span>，避免NPE.</div><div class="line"></div><div class="line">Java:</div><div class="line"></div><div class="line">```java</div><div class="line"><span class="built_in">String</span> s=<span class="keyword">null</span>;</div><div class="line">s.length(); <span class="comment">// NPE!</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (s != <span class="keyword">null</span>)&#123;</div><div class="line">  s.length(); <span class="comment">//Safe</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line"></div><div class="line">_foo()&#123;</div><div class="line"><span class="comment">//private 私有方法</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">String</span> bar()&#123;</div><div class="line"><span class="comment">//对于public方法，建议明确指名返回值类型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>单线程，使用<code>await</code> 和 <code>async</code> 异步处理</li>
+<li>使用<code>dynamic</code>关键字表示动态类型</li>
+</ul>
+<h4 id="Null-Safety"><a href="#Null-Safety" class="headerlink" title="Null Safety"></a>Null Safety</h4><p>Dart和Kotlin一样，可以使用<code>?</code>操作符检测Null，避免NPE.</p>
+<p>Java:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">String s=<span class="keyword">null</span>;</div><div class="line">s.length(); <span class="comment">// NPE!</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (s != <span class="keyword">null</span>)&#123;</div><div class="line">  s.length(); <span class="comment">//Safe</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Kotlin:</p>
 <figure class="highlight kotlin"><table><tr><td class="code"><pre><div class="line"><span class="keyword">val</span> s:String?=<span class="literal">null</span></div><div class="line">s?.length  <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
 <p>Dart:</p>
