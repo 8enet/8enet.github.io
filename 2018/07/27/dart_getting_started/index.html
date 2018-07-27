@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        使用dnsmasq搭建DNS Server｜zzzmode&#39;s blog
+        Dart 简单入门｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2018/07/27/dart_getting_started/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -145,23 +145,20 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>使用dnsmasq搭建DNS Server</h1>
+                    <h1>Dart 简单入门</h1>
                     
                     <span class="meta">
                     
                       作者 zzzmode
                     
                         <span>
-                          日期 2018-03-31
+                          日期 2018-07-27
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#linux"
-                           title="linux">linux</a>
-                        
-                        <a class="tag" href="/tags/#dnsmasq"
-                           title="dnsmasq">dnsmasq</a>
+                        <a class="tag" href="/tags/#dart"
+                           title="dart">dart</a>
                         
                     </div>
                 </div>
@@ -170,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            使用dnsmasq搭建DNS Server
+            Dart 简单入门
         </span>
     </div>
 </header>
@@ -181,51 +178,42 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>前段时间腾讯云活动撸了个1核2G内存云服务器，上海二区使用上海电信ping值不超过8ms左右，但带宽只有1M，适合玩玩，想着搭建一个自用DNS服务器。</p>
-<p>按照网上的很多文章，都是直接用<code>apt install dnsmasq</code> 安装的，我这样安装后死活不行，最多本地解析可以，而且会自动替换成本地dns服务器，简单看来下是启动脚本改的，我的目的只想开放53端口对外服务就可以，但是外网就是不可以，nmap可以扫描的udp53端口是打开着的，始终不通，所有放弃，最后自己编译安装dnsmasq。</p>
-<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><p>服务器环境 Ubuntu 16.04.4 LTS，其他发行版可能有所差别。<br>先安装一些依赖库，可能不完整<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">apt update</div><div class="line">apt install nettle-dev pkg-config</div></pre></td></tr></table></figure></p>
-<p>下载源代码解压<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">wget http://www.thekelleys.org.uk/dnsmasq/dnsmasq-2.79.tar.gz</div><div class="line">tar vxzf dnsmasq-2.79.tar.gz</div><div class="line"><span class="built_in">cd</span> dnsmasq-2.79</div><div class="line"></div><div class="line">make </div><div class="line">make install</div></pre></td></tr></table></figure></p>
-<p>生成的二进制文件在<code>/usr/local/sbin/dnsmasq</code></p>
-<p>如果需要开启DNSSEC功能，按照文档提示使用<br><code>make COPTS=-DHAVE_DNSSEC</code> 这样就可以，但是编译报错。<br>还可以手动修改<code>src/config.h</code> 文件，把<code>/* #define HAVE_DNSSEC */</code> 这一行的注释去掉也行。<br>编译成功后执行<code>dnsmasq -v</code> 就会看到已经启用DNSSEC<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Dnsmasq version 2.79  Copyright (c) 2000-2018 Simon Kelley</div><div class="line">Compile time options: IPv6 GNU-getopt no-DBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack ipset auth DNSSEC loop-detect inotify</div><div class="line">...</div></pre></td></tr></table></figure></p>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>创建<code>/etc/dnsmasq.conf</code> 配置文件，dnsmasq会默认读取此文件，有关配置的详细文档查看 <a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="external">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><code>/etc/dnsmasq.conf</code><br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">bogus-priv</div><div class="line">domain-needed</div><div class="line"></div><div class="line">#不自动同步文件更改</div><div class="line">no-poll</div><div class="line"></div><div class="line">#上游配置</div><div class="line">resolv-file=/etc/resolv.dnsmasq.conf</div><div class="line"></div><div class="line">#按顺序从上游dns查找</div><div class="line">strict-order</div><div class="line"></div><div class="line">#dns缓存大小</div><div class="line">cache-size=1000</div><div class="line"></div><div class="line">#如果想启用dnssec请配置添加下面配置，不用就删掉</div><div class="line">dnssec</div><div class="line">trust-anchor=.,19036,8,2,49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5</div><div class="line">trust-anchor=.,20326,8,2,E06D44B80B8F1D39A95C0B0D7C65D08458E880409BBC683457104237C7F8EC8D</div><div class="line">dnssec-check-unsigned</div></pre></td></tr></table></figure></p>
-<p>继续新建<code>/etc/resolv.dnsmasq.conf</code> 文件，配置上游dns服务，会按顺序解析，根据喜好自行选择配置。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">nameserver 8.8.8.8</div><div class="line">nameserver 119.29.29.29</div><div class="line">nameserver 114.114.114.114</div></pre></td></tr></table></figure></p>
-<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">以前台调试模式运行，会输出查询日志</div><div class="line">dnsmasq -d -q</div></pre></td></tr></table></figure>
-<p>然后我们登录另一个终端使用<code>dig</code>命令解析<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">dig qq.com @127.0.0.1</div></pre></td></tr></table></figure></p>
-<p>输出类似如下，表示dns服务已经搭建成功<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">dnsmasq: query[A] qq.com from 127.0.0.1</div><div class="line">dnsmasq: forwarded qq.com to 119.29.29.29</div><div class="line">dnsmasq: reply qq.com is 125.39.240.113</div><div class="line">dnsmasq: reply qq.com is 61.135.157.156</div></pre></td></tr></table></figure></p>
-<p>现在在你本机使用 <code>dig qq.com @your_server_public_ip</code> 也可以解析到了。</p>
-<p>开机启动和守护进程管理可以通过<code>Supervisor</code> 启动<br><code>/etc/supervisor/conf.d/dnsmasq.conf</code></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[program:dnsmasq]</div><div class="line">command=/usr/local/sbin/dnsmasq -k </div><div class="line">autorestart=false</div><div class="line">user=root</div></pre></td></tr></table></figure>
-<blockquote>
-<p>如果要输出dnsmasq日志做后续分析，加上<code>-q</code>参数，日志输出到了<code>/var/log/syslog</code> 文件中，可以通过<code>journalctl -f</code> 查看实时输出的日志</p>
-</blockquote>
-<p>然后supervisor更新一下<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl update</div><div class="line">supervisorctl status</div><div class="line"></div><div class="line">输出</div><div class="line">...</div><div class="line">dnsmasq                          RUNNING   pid 13035, uptime 0:04:18</div></pre></td></tr></table></figure></p>
-<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>此时 dnsmasq 已经在正常运行，可以设置电脑dns server为自己服务器ip了，但是解析国内地址访问不太理想。</p>
-<ul>
-<li><p>借助dnsmasq-china-list项目的dns配置加速解析，默认使用的是<code>114.114.114.114</code>解析国内域名，可以通过项目自带的<code>dnsmasq-update-china-list</code> 脚本替换为其他的dns服务器。<br>手动安装，更多用法查看项目说明</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/dnsmasq.d</div><div class="line">wget -P /etc/dnsmasq.d https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf</div></pre></td></tr></table></figure>
-<p>修改<code>/etc/dnsmasq.conf</code> 配置文件，在后面添加一行<code>conf-dir=/etc/dnsmasq.d</code></p>
-</li>
-<li><p>使用EDNS-CLIENT-SUBNET 优化自用线路<br>建议使用阿里公共DNS <code>223.5.5.5</code> 解析速度比较理想。</p>
-</li>
+                <p>最近Google开发的<a href="https://flutter.io/" target="_blank" rel="external">Flutter</a>跨平台UI方案视乎很火爆，各大社区都有试用文章和开发一些demo，作为Flutter的开发语言<a href="https://www.dartlang.org/" target="_blank" rel="external">Dart</a>，如果要入门Flutter的话，有必要先学下Dart这么语言。</p>
+<p>首先，Dart安装环境搭建参考官网文档，然后仔细阅读下dart语言指南<br><a href="https://www.dartlang.org/guides/language/language-tour" target="_blank" rel="external">https://www.dartlang.org/guides/language/language-tour</a><br>这篇文章介绍了Dart的基本语法和常用特性，强烈建议阅读一遍！</p>
+<p>作为Android开发者，Java和Kotlin是最熟悉的两面语言，Dart和这两门语言非常类似，我们可以很快的入门。</p>
+<h3 id="常用语法对比"><a href="#常用语法对比" class="headerlink" title="常用语法对比"></a>常用语法对比</h3><h5 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h5><ul>
+<li>if-else, for, while, do-while 语法基本一样</li>
+<li>switch-case 语法和Java一样</li>
+<li>++/– 语法一样</li>
+<li>类型检测和转换和Kotlin一样，使用<code>is</code>和<code>as</code>关键字</li>
+<li>try-catch-finally 语法差不多，</li>
+<li>位操作符和Java一样</li>
+<li>List/Map 和Kotlin类似</li>
+<li>class, extends, implements, abstract, enum, static 这些关键字和Java语义一样</li>
+<li>泛型语法和Java相似</li>
+<li>支持操作符重载</li>
 </ul>
-<p>最后重启dnsmasq生效<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">supervisorctl restart dnsmasq</div></pre></td></tr></table></figure></p>
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p><a href="http://tools.cloudxns.net/index.php/Index/Diag" target="_blank" rel="external">http://tools.cloudxns.net/index.php/Index/Diag</a></p>
-<p>参考:<br><a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="external">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><a href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions" target="_blank" rel="external">https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions</a><br><a href="https://github.com/felixonmars/dnsmasq-china-list/" target="_blank" rel="external">https://github.com/felixonmars/dnsmasq-china-list/</a></p>
+<h5 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h5><ul>
+<li>Dart2 可以省略<code>new</code>关键字</li>
+<li>没有访问修饰符，默认都是<code>public</code>,如果类名方法属性等前面加上<code>_</code>则表示<code>private</code>，有点类似Python</li>
+<li>方法前不需要关键字修饰，可以不写返回值类似</li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line">_foo()&#123;</div><div class="line"><span class="comment">//private 私有方法</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">String</span> bar()&#123;</div><div class="line"><span class="comment">//对于public方法，建议明确指名返回值类型</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">* 单线程，使用`<span class="keyword">await</span>` 和 `<span class="keyword">async</span>` 异步处理</div><div class="line">* 使用`<span class="keyword">dynamic</span>`关键字表示动态类型</div><div class="line"></div><div class="line">##### <span class="built_in">Null</span> Safety</div><div class="line">Dart和Kotlin一样，可以使用`?`操作符检测<span class="built_in">Null</span>，避免NPE.</div><div class="line"></div><div class="line">Java:</div><div class="line"></div><div class="line">```java</div><div class="line"><span class="built_in">String</span> s=<span class="keyword">null</span>;</div><div class="line">s.length(); <span class="comment">// NPE!</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (s != <span class="keyword">null</span>)&#123;</div><div class="line">  s.length(); <span class="comment">//Safe</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Kotlin:</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><div class="line"><span class="keyword">val</span> s:String?=<span class="literal">null</span></div><div class="line">s?.length  <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
+<p>Dart:</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line"><span class="built_in">String</span> s=<span class="keyword">null</span>;</div><div class="line">s?.length; <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
+<p>上手还是很容易的，对于移动端开发者来说，异步处理是个很重要的部分，搞不好就会导致UI卡顿，Dart中异步处理和Java中不一样，这部分深入学习后再做记录。</p>
 
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2018/07/27/dart_getting_started/" data-toggle="tooltip" data-placement="top"
-                           title="Dart 简单入门">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2017/12/15/2017-shanghai-gdd/" data-toggle="tooltip" data-placement="top"
-                           title="2017上海 Google Developer Days">Next Post &rarr;</a>
+                        <a href="/2018/03/31/dnsmasq-dns-server/" data-toggle="tooltip" data-placement="top"
+                           title="使用dnsmasq搭建DNS Server">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -270,8 +258,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "blog-zzzmode";
-    var disqus_identifier = "https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/";
-    var disqus_url = "https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/";
+    var disqus_identifier = "https://blog.zzzmode.com/2018/07/27/dart_getting_started/";
+    var disqus_url = "https://blog.zzzmode.com/2018/07/27/dart_getting_started/";
 
     (function () {
         var dsq = document.createElement('script');
