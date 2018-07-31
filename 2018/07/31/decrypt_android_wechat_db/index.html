@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        Dart 简单入门｜zzzmode&#39;s blog
+        几种解密Android版微信聊天数据库的方法｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2018/07/27/dart_getting_started/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2018/07/31/decrypt_android_wechat_db/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -145,20 +145,21 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>Dart 简单入门</h1>
+                    <h1>几种解密Android版微信聊天数据库的方法</h1>
                     
                     <span class="meta">
                     
-                      作者 zzzmode
-                    
                         <span>
-                          日期 2018-07-27
+                          日期 2018-07-31
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#dart"
-                           title="dart">dart</a>
+                        <a class="tag" href="/tags/#android"
+                           title="android">android</a>
+                        
+                        <a class="tag" href="/tags/#wechat"
+                           title="wechat">wechat</a>
                         
                     </div>
                 </div>
@@ -167,7 +168,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            Dart 简单入门
+            几种解密Android版微信聊天数据库的方法
         </span>
     </div>
 </header>
@@ -178,54 +179,28 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>最近Google开发的<a href="https://flutter.io/" target="_blank" rel="external">Flutter</a>跨平台UI方案视乎很火爆，各大社区都有试用文章和开发一些demo，作为Flutter的开发语言<a href="https://www.dartlang.org/" target="_blank" rel="external">Dart</a>，如果要入门Flutter的话，有必要先学下Dart这么语言。</p>
-<p>首先，Dart安装环境搭建参考官网文档，然后仔细阅读下dart语言指南<br><a href="https://www.dartlang.org/guides/language/language-tour" target="_blank" rel="external">https://www.dartlang.org/guides/language/language-tour</a><br>这篇文章介绍了Dart的基本语法和常用特性，强烈建议阅读一遍！</p>
-<p>作为Android开发者，Java和Kotlin是最熟悉的两面语言，Dart和这两门语言非常类似，我们可以很快的入门。</p>
-<h3 id="常用语法对比"><a href="#常用语法对比" class="headerlink" title="常用语法对比"></a>常用语法对比</h3><h5 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h5><ul>
-<li>if-else, for, while, do-while 语法基本一样</li>
-<li>switch-case 语法和Java一样</li>
-<li>++/– 语法一样</li>
-<li>类型检测和转换和Kotlin一样，使用<code>is</code>和<code>as</code>关键字</li>
-<li>try-catch-finally 语法差不多，</li>
-<li>位操作符和Java一样</li>
-<li>List/Map 和Kotlin类似</li>
-<li>class, extends, implements, abstract, enum, static 这些关键字和Java语义一样</li>
-<li>泛型语法和Java相似</li>
-<li>支持操作符重载</li>
-</ul>
-<h5 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h5><ul>
-<li>Dart2 可以省略<code>new</code>关键字</li>
-<li>没有访问修饰符，默认都是<code>public</code>,如果类名方法属性等前面加上<code>_</code>则表示<code>private</code>，有点类似Python</li>
-<li>方法前不需要关键字修饰，可以不写返回值类似</li>
-</ul>
-<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line"></div><div class="line">_foo()&#123;</div><div class="line"><span class="comment">//private 私有方法</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">String</span> bar()&#123;</div><div class="line"><span class="comment">//对于public方法，建议明确指名返回值类型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>单线程，使用<code>await</code> 和 <code>async</code> 异步处理</li>
-<li>使用<code>dynamic</code>关键字表示动态类型</li>
-</ul>
-<h4 id="Null-Safety"><a href="#Null-Safety" class="headerlink" title="Null Safety"></a>Null Safety</h4><p>Dart和Kotlin一样，可以使用<code>?</code>操作符检测Null，避免NPE.</p>
-<p>Java:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">String s=<span class="keyword">null</span>;</div><div class="line">s.length(); <span class="comment">// NPE!</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (s != <span class="keyword">null</span>)&#123;</div><div class="line">  s.length(); <span class="comment">//Safe</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Kotlin:</p>
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><div class="line"><span class="keyword">val</span> s:String?=<span class="literal">null</span></div><div class="line">s?.length  <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
-<p>Dart:</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line"><span class="built_in">String</span> s=<span class="keyword">null</span>;</div><div class="line">s?.length; <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
-<p>上手还是很容易的，对于移动端开发者来说，异步处理是个很重要的部分，搞不好就会导致UI卡顿，Dart中异步处理和Java中不一样，这部分深入学习后再做记录。</p>
+                <p>Android版微信数据库使用SQLCipher加密，并开源了一个高效的db框架<a href="https://github.com/Tencent/wcdb" target="_blank" rel="external">https://github.com/Tencent/wcdb</a></p>
+<p>聊天数据库文件保存在<code>/data/data/com.tencent.mm/MicroMsg/${userid}/EnMicroMsg.db</code><br>聊天资源文件(图片，语音等)保存在<code>/sdcard/tencent/MicroMsg/${userid}/${avatar,emoji,image2,sfs,video,voice2}</code></p>
+<p>总结几种常用的解密<code>EnMicroMsg.db</code> 的方法</p>
+<h4 id="方法1-设备imei-uin"><a href="#方法1-设备imei-uin" class="headerlink" title="方法1 设备imei+uin"></a>方法1 设备imei+uin</h4><p><a href="https://www.zhihu.com/question/19924224/answer/69982884" target="_blank" rel="external">https://www.zhihu.com/question/19924224/answer/69982884</a><br><a href="https://zhuanlan.zhihu.com/p/28935173" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/28935173</a></p>
+<h4 id="方法2-解密CompatibleInfo-cfg"><a href="#方法2-解密CompatibleInfo-cfg" class="headerlink" title="方法2 解密CompatibleInfo.cfg"></a>方法2 解密CompatibleInfo.cfg</h4><p>反序列化<code>/data/data/com.tencent.mm/MicroMsg/CompatibleInfo.cfg</code> 文件得到设备id<br><a href="https://github.com/ppwwyyxx/wechat-dump/issues/42" target="_blank" rel="external">https://github.com/ppwwyyxx/wechat-dump/issues/42</a><br><a href="https://gist.github.com/ChiChou/36556fd412a9e3216abecf06e084e4d9" target="_blank" rel="external">https://gist.github.com/ChiChou/36556fd412a9e3216abecf06e084e4d9</a></p>
+<h4 id="方法3-利用Xposed"><a href="#方法3-利用Xposed" class="headerlink" title="方法3 利用Xposed"></a>方法3 利用Xposed</h4><p>Hook java层<code>openDatabase</code>方法提取解密参数<br><a href="https://github.com/adamyi/AndroidWechatSQLiteDecrypt" target="_blank" rel="external">https://github.com/adamyi/AndroidWechatSQLiteDecrypt</a></p>
+<h4 id="方法4-暴力破解，穷举密码"><a href="#方法4-暴力破解，穷举密码" class="headerlink" title="方法4 暴力破解，穷举密码"></a>方法4 暴力破解，穷举密码</h4><p><a href="https://github.com/chg-hou/EnMicroMsg.db-Password-Cracker" target="_blank" rel="external">https://github.com/chg-hou/EnMicroMsg.db-Password-Cracker</a></p>
+<blockquote>
+<p>其中方法3应该是成功率最高的，但是需要安装xposed框架</p>
+</blockquote>
+<p>更多参考链接</p>
+<p><a href="https://github.com/ppwwyyxx/wechat-dump" target="_blank" rel="external">https://github.com/ppwwyyxx/wechat-dump</a><br><a href="https://github.com/sqlitebrowser/sqlitebrowser" target="_blank" rel="external">https://github.com/sqlitebrowser/sqlitebrowser</a></p>
 
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2018/07/31/decrypt_android_wechat_db/" data-toggle="tooltip" data-placement="top"
-                           title="几种解密Android版微信聊天数据库的方法">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2018/03/31/dnsmasq-dns-server/" data-toggle="tooltip" data-placement="top"
-                           title="使用dnsmasq搭建DNS Server">Next Post &rarr;</a>
+                        <a href="/2018/07/27/dart_getting_started/" data-toggle="tooltip" data-placement="top"
+                           title="Dart 简单入门">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -270,8 +245,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "blog-zzzmode";
-    var disqus_identifier = "https://blog.zzzmode.com/2018/07/27/dart_getting_started/";
-    var disqus_url = "https://blog.zzzmode.com/2018/07/27/dart_getting_started/";
+    var disqus_identifier = "https://blog.zzzmode.com/2018/07/31/decrypt_android_wechat_db/";
+    var disqus_url = "https://blog.zzzmode.com/2018/07/31/decrypt_android_wechat_db/";
 
     (function () {
         var dsq = document.createElement('script');
