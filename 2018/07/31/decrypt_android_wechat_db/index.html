@@ -179,9 +179,9 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>Android版微信数据库使用SQLCipher加密，并开源了一个高效的db框架<a href="https://github.com/Tencent/wcdb" target="_blank" rel="external">https://github.com/Tencent/wcdb</a></p>
+                <p>之前因为一些原因需要解密Android微信聊天数据库，总结下几种解密方案，下面链接里面有对数据库的详细描述，这里就不再赘述了。</p>
 <p>聊天数据库文件保存在<code>/data/data/com.tencent.mm/MicroMsg/${userid}/EnMicroMsg.db</code><br>聊天资源文件(图片，语音等)保存在<code>/sdcard/tencent/MicroMsg/${userid}/${avatar,emoji,image2,sfs,video,voice2}</code></p>
-<p>总结几种常用的解密<code>EnMicroMsg.db</code> 的方法</p>
+<p>几种常用的解密<code>EnMicroMsg.db</code> 的方法</p>
 <h4 id="方法1-设备imei-uin"><a href="#方法1-设备imei-uin" class="headerlink" title="方法1 设备imei+uin"></a>方法1 设备imei+uin</h4><p><a href="https://www.zhihu.com/question/19924224/answer/69982884" target="_blank" rel="external">https://www.zhihu.com/question/19924224/answer/69982884</a><br><a href="https://zhuanlan.zhihu.com/p/28935173" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/28935173</a></p>
 <h4 id="方法2-解密CompatibleInfo-cfg"><a href="#方法2-解密CompatibleInfo-cfg" class="headerlink" title="方法2 解密CompatibleInfo.cfg"></a>方法2 解密CompatibleInfo.cfg</h4><p>反序列化<code>/data/data/com.tencent.mm/MicroMsg/CompatibleInfo.cfg</code> 文件得到设备id<br><a href="https://github.com/ppwwyyxx/wechat-dump/issues/42" target="_blank" rel="external">https://github.com/ppwwyyxx/wechat-dump/issues/42</a><br><a href="https://gist.github.com/ChiChou/36556fd412a9e3216abecf06e084e4d9" target="_blank" rel="external">https://gist.github.com/ChiChou/36556fd412a9e3216abecf06e084e4d9</a></p>
 <h4 id="方法3-利用Xposed"><a href="#方法3-利用Xposed" class="headerlink" title="方法3 利用Xposed"></a>方法3 利用Xposed</h4><p>Hook java层<code>openDatabase</code>方法提取解密参数<br><a href="https://github.com/adamyi/AndroidWechatSQLiteDecrypt" target="_blank" rel="external">https://github.com/adamyi/AndroidWechatSQLiteDecrypt</a></p>
@@ -189,6 +189,7 @@
 <blockquote>
 <p>其中方法3应该是成功率最高的，但是需要安装xposed框架</p>
 </blockquote>
+<p>Android版微信数据库使用SQLCipher加密，并开源了一个高效的db框架<a href="https://github.com/Tencent/wcdb" target="_blank" rel="external">https://github.com/Tencent/wcdb</a></p>
 <p>更多参考链接</p>
 <p><a href="https://github.com/ppwwyyxx/wechat-dump" target="_blank" rel="external">https://github.com/ppwwyyxx/wechat-dump</a><br><a href="https://github.com/sqlitebrowser/sqlitebrowser" target="_blank" rel="external">https://github.com/sqlitebrowser/sqlitebrowser</a></p>
 
