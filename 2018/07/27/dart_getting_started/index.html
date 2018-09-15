@@ -178,8 +178,8 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>最近Google开发的<a href="https://flutter.io/" target="_blank" rel="external">Flutter</a>跨平台UI方案视乎很火爆，各大社区都有试用文章和开发一些demo，作为Flutter的开发语言<a href="https://www.dartlang.org/" target="_blank" rel="external">Dart</a>，如果要入门Flutter的话，有必要先学下Dart这么语言。</p>
-<p>首先，Dart安装环境搭建参考官网文档，然后仔细阅读下dart语言指南<br><a href="https://www.dartlang.org/guides/language/language-tour" target="_blank" rel="external">https://www.dartlang.org/guides/language/language-tour</a><br>这篇文章介绍了Dart的基本语法和常用特性，强烈建议阅读一遍！</p>
+                <p>最近Google开发的<a href="https://flutter.io/" target="_blank" rel="noopener">Flutter</a>跨平台UI方案视乎很火爆，各大社区都有试用文章和开发一些demo，作为Flutter的开发语言<a href="https://www.dartlang.org/" target="_blank" rel="noopener">Dart</a>，如果要入门Flutter的话，有必要先学下Dart这么语言。</p>
+<p>首先，Dart安装环境搭建参考官网文档，然后仔细阅读下dart语言指南<br><a href="https://www.dartlang.org/guides/language/language-tour" target="_blank" rel="noopener">https://www.dartlang.org/guides/language/language-tour</a><br>这篇文章介绍了Dart的基本语法和常用特性，强烈建议阅读一遍！</p>
 <p>作为Android开发者，Java和Kotlin是最熟悉的两面语言，Dart和这两门语言非常类似，我们可以很快的入门。</p>
 <h3 id="常用语法对比"><a href="#常用语法对比" class="headerlink" title="常用语法对比"></a>常用语法对比</h3><h5 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h5><ul>
 <li>if-else, for, while, do-while 语法基本一样</li>
@@ -198,18 +198,18 @@
 <li>没有访问修饰符，默认都是<code>public</code>,如果类名方法属性等前面加上<code>_</code>则表示<code>private</code>，有点类似Python</li>
 <li>方法前不需要关键字修饰，可以不写返回值类似</li>
 </ul>
-<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line"></div><div class="line">_foo()&#123;</div><div class="line"><span class="comment">//private 私有方法</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">String</span> bar()&#123;</div><div class="line"><span class="comment">//对于public方法，建议明确指名返回值类型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">_foo()&#123;</span><br><span class="line"><span class="comment">//private 私有方法</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">String</span> bar()&#123;</span><br><span class="line"><span class="comment">//对于public方法，建议明确指名返回值类型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>单线程，使用<code>await</code> 和 <code>async</code> 异步处理</li>
 <li>使用<code>dynamic</code>关键字表示动态类型</li>
 </ul>
 <h4 id="Null-Safety"><a href="#Null-Safety" class="headerlink" title="Null Safety"></a>Null Safety</h4><p>Dart和Kotlin一样，可以使用<code>?</code>操作符检测Null，避免NPE.</p>
 <p>Java:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">String s=<span class="keyword">null</span>;</div><div class="line">s.length(); <span class="comment">// NPE!</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (s != <span class="keyword">null</span>)&#123;</div><div class="line">  s.length(); <span class="comment">//Safe</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s=<span class="keyword">null</span>;</span><br><span class="line">s.length(); <span class="comment">// NPE!</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (s != <span class="keyword">null</span>)&#123;</span><br><span class="line">  s.length(); <span class="comment">//Safe</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Kotlin:</p>
-<figure class="highlight kotlin"><table><tr><td class="code"><pre><div class="line"><span class="keyword">val</span> s:String?=<span class="literal">null</span></div><div class="line">s?.length  <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> s:String?=<span class="literal">null</span></span><br><span class="line">s?.length  <span class="comment">//Safe</span></span><br></pre></td></tr></table></figure>
 <p>Dart:</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><div class="line"><span class="built_in">String</span> s=<span class="keyword">null</span>;</div><div class="line">s?.length; <span class="comment">//Safe</span></div></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="built_in">String</span> s=<span class="keyword">null</span>;</span><br><span class="line">s?.length; <span class="comment">//Safe</span></span><br></pre></td></tr></table></figure>
 <p>上手还是很容易的，对于移动端开发者来说，异步处理是个很重要的部分，搞不好就会导致UI卡顿，Dart中异步处理和Java中不一样，这部分深入学习后再做记录。</p>
 
                 <hr>

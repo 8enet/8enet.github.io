@@ -184,7 +184,7 @@
 <li><p>选中第一分区(我这里的是Software(E))，右键调整分区容量，在<font color="red">分区前部的空间出填入200MB </font>,当然大一些也无所谓的，然后点击开始<br><img src="/images/post_osx_2.png" alt="DiskGenius"></p>
 </li>
 <li><p>几分钟后就好了,新建EFI分区，我这里使用命令方式创建的</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">diskpart   </div><div class="line">list disk   </div><div class="line">select disk 1   ###这里选中要分区的磁盘   </div><div class="line">create partition efi size=200</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">diskpart   </span><br><span class="line">list disk   </span><br><span class="line">select disk 1   ###这里选中要分区的磁盘   </span><br><span class="line">create partition efi size=200</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>完成之后在DiskGenius 里面会看到ESP分区，格式化掉<br>最后回到Mac 下去抹掉F分区就可以了。</p>
