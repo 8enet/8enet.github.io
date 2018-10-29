@@ -2,7 +2,7 @@
 <html lang="en">
 
 <!-- Head tag -->
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,14 +24,18 @@
 
     <link rel="canonical" href="https://blog.zzzmode.com/tags/">
 
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
+
+
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/blog-style.css">
 
     <!-- Pygments Github CSS -->
     <link rel="stylesheet" href="/css/syntax.css">
+
 </head>
 
 <style>
@@ -43,8 +47,8 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
-" data-ishome = "false" >
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost="false" data-istags="false
+" data-ishome="false">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header page-scroll">
@@ -148,13 +152,15 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <!-- 标签云 -->
-            <div id='tag_cloud' class="tags">
+            <div id="tag_cloud" class="tags">
+                
+                <a href="#server" title="server" rel="0">server</a>
                 
                 <a href="#android" title="android" rel="9">android</a>
                 
-                <a href="#dart" title="dart" rel="1">dart</a>
-                
                 <a href="#charles" title="charles" rel="1">charles</a>
+                
+                <a href="#dart" title="dart" rel="1">dart</a>
                 
                 <a href="#wechat" title="wechat" rel="1">wechat</a>
                 
@@ -168,7 +174,7 @@
                 
                 <a href="#webhook" title="webhook" rel="1">webhook</a>
                 
-                <a href="#osx" title="osx" rel="1">osx</a>
+                <a href="#Android" title="Android" rel="1">Android</a>
                 
                 <a href="#github" title="github" rel="1">github</a>
                 
@@ -178,11 +184,20 @@
                 
                 <a href="#disqus" title="disqus" rel="1">disqus</a>
                 
-                <a href="#Android" title="Android" rel="1">Android</a>
+                <a href="#nginx" title="nginx" rel="1">nginx</a>
+                
+                <a href="#osx" title="osx" rel="1">osx</a>
                 
             </div>
 
             <!-- 标签列表 -->
+            
+            <div class="one-tag-list">
+                <span class="fa fa-tag listing-seperator" id="server">
+                    <span class="tag-text">server</span>
+                </span>
+                
+            </div>
             
             <div class="one-tag-list">
                 <span class="fa fa-tag listing-seperator" id="android">
@@ -200,9 +215,9 @@
                 <hr>
                 
                 <div class="post-preview">
-                    <a href="/2016/05/28/android-roprop-modify/">
+                    <a href="/2016/12/25/android-LayoutInflater/">
                         <h2 class="post-title">
-                            Android修改ro.debuggable属性
+                            Android LayoutInflater 探索
                         </h2>
                         
                     </a>
@@ -210,9 +225,9 @@
                 <hr>
                 
                 <div class="post-preview">
-                    <a href="/2016/12/25/android-LayoutInflater/">
+                    <a href="/2016/05/28/android-roprop-modify/">
                         <h2 class="post-title">
-                            Android LayoutInflater 探索
+                            Android修改ro.debuggable属性
                         </h2>
                         
                     </a>
@@ -282,14 +297,14 @@
             </div>
             
             <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="dart">
-                    <span class="tag-text">dart</span>
+                <span class="fa fa-tag listing-seperator" id="charles">
+                    <span class="tag-text">charles</span>
                 </span>
                 
                 <div class="post-preview">
-                    <a href="/2018/07/27/dart_getting_started/">
+                    <a href="/2017/05/16/charles-4.0.2-cracked/">
                         <h2 class="post-title">
-                            Dart 简单入门
+                            Charles 4.2.7 破解
                         </h2>
                         
                     </a>
@@ -299,14 +314,14 @@
             </div>
             
             <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="charles">
-                    <span class="tag-text">charles</span>
+                <span class="fa fa-tag listing-seperator" id="dart">
+                    <span class="tag-text">dart</span>
                 </span>
                 
                 <div class="post-preview">
-                    <a href="/2017/05/16/charles-4.0.2-cracked/">
+                    <a href="/2018/07/27/dart_getting_started/">
                         <h2 class="post-title">
-                            Charles 4.2.7 破解
+                            Dart 简单入门
                         </h2>
                         
                     </a>
@@ -418,14 +433,14 @@
             </div>
             
             <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="osx">
-                    <span class="tag-text">osx</span>
+                <span class="fa fa-tag listing-seperator" id="Android">
+                    <span class="tag-text">Android</span>
                 </span>
                 
                 <div class="post-preview">
-                    <a href="/2016/05/02/osx-mediakit-reports-partition-map-too-small/">
+                    <a href="/2017/07/27/modify_smali_code_part1/">
                         <h2 class="post-title">
-                            Mac OSX 抹盘发生错误:Mediakit 报告设备上空间不足以执行此操作的解决办法
+                            修改smali插入代码
                         </h2>
                         
                     </a>
@@ -503,14 +518,31 @@
             </div>
             
             <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="Android">
-                    <span class="tag-text">Android</span>
+                <span class="fa fa-tag listing-seperator" id="nginx">
+                    <span class="tag-text">nginx</span>
                 </span>
                 
                 <div class="post-preview">
-                    <a href="/2017/07/27/modify_smali_code_part1/">
+                    <a href="/2018/10/24/nginx-tls13/">
                         <h2 class="post-title">
-                            修改smali插入代码
+                            Nginx TLS1.3 编译配置
+                        </h2>
+                        
+                    </a>
+                </div>
+                <hr>
+                
+            </div>
+            
+            <div class="one-tag-list">
+                <span class="fa fa-tag listing-seperator" id="osx">
+                    <span class="tag-text">osx</span>
+                </span>
+                
+                <div class="post-preview">
+                    <a href="/2016/05/02/osx-mediakit-reports-partition-map-too-small/">
+                        <h2 class="post-title">
+                            Mac OSX 抹盘发生错误:Mediakit 报告设备上空间不足以执行此操作的解决办法
                         </h2>
                         
                     </a>
@@ -551,7 +583,7 @@
 
                 
                     <li>
-                        <a target="_blank"  href="https://github.com/8enet">
+                        <a target="_blank" href="https://github.com/8enet">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -576,11 +608,9 @@
     </div>
 </footer>
 
-<!-- jQuery -->
-<script src="/js/jquery.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js"></script>
+<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 <!-- Custom Theme JavaScript -->
 <script src="/js/blog.js"></script>

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <!-- Head tag -->
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,14 +24,18 @@
 
     <link rel="canonical" href="https://blog.zzzmode.com/2018/07/31/decrypt_android_wechat_db/">
 
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
+
+
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/blog-style.css">
 
     <!-- Pygments Github CSS -->
     <link rel="stylesheet" href="/css/syntax.css">
+
 </head>
 
 <style>
@@ -43,8 +47,8 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
-" data-ishome = "false" >
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost="true" data-istags="false
+" data-ishome="false">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header page-scroll">
@@ -127,8 +131,7 @@
 <!--only post-->
 
 
-<img class="wechat-title-img"
-     src="">
+<img class="wechat-title-img" src="">
 
 
 <style>
@@ -155,11 +158,9 @@
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#android"
-                           title="android">android</a>
+                        <a class="tag" href="/tags/#android" title="android">android</a>
                         
-                        <a class="tag" href="/tags/#wechat"
-                           title="wechat">wechat</a>
+                        <a class="tag" href="/tags/#wechat" title="wechat">wechat</a>
                         
                     </div>
                 </div>
@@ -198,10 +199,13 @@
 
                 <ul class="pager">
                     
+                    <li class="previous">
+                        <a href="/2018/10/24/nginx-tls13/" data-toggle="tooltip" data-placement="top" title="Nginx TLS1.3 编译配置">&larr; Previous Post</a>
+                    </li>
+                    
                     
                     <li class="next">
-                        <a href="/2018/07/27/dart_getting_started/" data-toggle="tooltip" data-placement="top"
-                           title="Dart 简单入门">Next Post &rarr;</a>
+                        <a href="/2018/07/27/dart_getting_started/" data-toggle="tooltip" data-placement="top" title="Dart 简单入门">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -209,14 +213,16 @@
                 
 
                 
-                <!-- disqus 评论框 start -->
-                <div class="comment">
-                    <div id="disqus_thread" class="disqus-thread"></div>
-                </div>
-                <!-- disqus 评论框 end -->
-                
 
-            </div>
+
+
+                <div class="comment">
+                    <div id="vcomments"></div>
+    
+                
+                </div>
+                
+                 </div>
 
             
         </div>
@@ -241,23 +247,25 @@
 </article>
 
 
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    
+    <script src="/js/Valine.min.js"></script>
 
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "blog-zzzmode";
-    var disqus_identifier = "https://blog.zzzmode.com/2018/07/31/decrypt_android_wechat_db/";
-    var disqus_url = "https://blog.zzzmode.com/2018/07/31/decrypt_android_wechat_db/";
+   
+   new Valine({
+    av: AV,
+    emoticon_url:null,
+    emoticon_list:[],
+            el: '#vcomments',
+            appId: 'zAkEGoofQ1h29Av3rSIl8MvE-gzGzoHsz',
+            appKey: 'sRuaAtK39dYLVy5Y6TTB5wP3'
+        })
 
-    (function () {
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+
 </script>
-<!-- disqus 公共JS代码 end -->
+
+
 
 
 
@@ -289,7 +297,7 @@
 
                 
                     <li>
-                        <a target="_blank"  href="https://github.com/8enet">
+                        <a target="_blank" href="https://github.com/8enet">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -314,11 +322,9 @@
     </div>
 </footer>
 
-<!-- jQuery -->
-<script src="/js/jquery.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js"></script>
+<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 <!-- Custom Theme JavaScript -->
 <script src="/js/blog.js"></script>

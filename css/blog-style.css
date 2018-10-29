@@ -43,6 +43,9 @@ hr{
     border-color: #0085a1;
 }
 
+
+
+
 .sidebar-container .short-about img {
     width: 100%;
     display: block;
@@ -1200,6 +1203,28 @@ img::-moz-selection {
     position: absolute;
     height:0;
     width:0;
+}
+
+.tools {
+
+}
+
+
+.sidebar-container .tools  h5 {
+    font-size: 18px;
+    color: #555 !important;
+}
+
+.sidebar-container .tools  a {
+    text-decoration:none;
+    font-size: 16px;
+    color: #555 !important;
+}
+
+.sidebar-container .tools  a:hover,
+.sidebar-container .tools  a:active {
+    font-size: 16px;
+    color: #0085a1 !important;
 }
 
 

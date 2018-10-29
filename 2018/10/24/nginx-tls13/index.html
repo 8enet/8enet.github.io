@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        使用dnsmasq搭建DNS Server｜zzzmode&#39;s blog
+        Nginx TLS1.3 编译配置｜zzzmode&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="https://blog.zzzmode.com/2018/03/31/dnsmasq-dns-server/">
+    <link rel="canonical" href="https://blog.zzzmode.com/2018/10/24/nginx-tls13/">
 
 
     <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -148,21 +148,17 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>使用dnsmasq搭建DNS Server</h1>
+                    <h1>Nginx TLS1.3 编译配置</h1>
                     
                     <span class="meta">
                     
-                      作者 zzzmode
-                    
                         <span>
-                          日期 2018-03-31
+                          日期 2018-10-24
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#linux" title="linux">linux</a>
-                        
-                        <a class="tag" href="/tags/#dnsmasq" title="dnsmasq">dnsmasq</a>
+                        <a class="tag" href="/tags/#nginx" title="nginx">nginx</a>
                         
                     </div>
                 </div>
@@ -171,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            使用dnsmasq搭建DNS Server
+            Nginx TLS1.3 编译配置
         </span>
     </div>
 </header>
@@ -182,49 +178,36 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-2 post-container">
-                <p>前段时间腾讯云活动撸了个1核2G内存云服务器，上海二区使用上海电信ping值不超过8ms左右，但带宽只有1M，适合玩玩，想着搭建一个自用DNS服务器。</p>
-<p>按照网上的很多文章，都是直接用<code>apt install dnsmasq</code> 安装的，我这样安装后死活不行，最多本地解析可以，而且会自动替换成本地dns服务器，简单看来下是启动脚本改的，我的目的只想开放53端口对外服务就可以，但是外网就是不可以，nmap可以扫描的udp53端口是打开着的，始终不通，所有放弃，最后自己编译安装dnsmasq。</p>
-<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><p>服务器环境 Ubuntu 16.04.4 LTS，其他发行版可能有所差别。<br>先安装一些依赖库，可能不完整<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install nettle-dev pkg-config</span><br></pre></td></tr></table></figure></p>
-<p>下载源代码解压<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget http://www.thekelleys.org.uk/dnsmasq/dnsmasq-2.79.tar.gz</span><br><span class="line">tar vxzf dnsmasq-2.79.tar.gz</span><br><span class="line"><span class="built_in">cd</span> dnsmasq-2.79</span><br><span class="line"></span><br><span class="line">make </span><br><span class="line">make install</span><br></pre></td></tr></table></figure></p>
-<p>生成的二进制文件在<code>/usr/local/sbin/dnsmasq</code></p>
-<p>如果需要开启DNSSEC功能，按照文档提示使用<br><code>make COPTS=-DHAVE_DNSSEC</code> 这样就可以，但是编译报错。<br>还可以手动修改<code>src/config.h</code> 文件，把<code>/* #define HAVE_DNSSEC */</code> 这一行的注释去掉也行。<br>编译成功后执行<code>dnsmasq -v</code> 就会看到已经启用DNSSEC<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Dnsmasq version 2.79  Copyright (c) 2000-2018 Simon Kelley</span><br><span class="line">Compile time options: IPv6 GNU-getopt no-DBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP no-conntrack ipset auth DNSSEC loop-detect inotify</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>创建<code>/etc/dnsmasq.conf</code> 配置文件，dnsmasq会默认读取此文件，有关配置的详细文档查看 <a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="noopener">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><code>/etc/dnsmasq.conf</code><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bogus-priv</span><br><span class="line">domain-needed</span><br><span class="line"></span><br><span class="line">#不自动同步文件更改</span><br><span class="line">no-poll</span><br><span class="line"></span><br><span class="line">#上游配置</span><br><span class="line">resolv-file=/etc/resolv.dnsmasq.conf</span><br><span class="line"></span><br><span class="line">#按顺序从上游dns查找</span><br><span class="line">strict-order</span><br><span class="line"></span><br><span class="line">#dns缓存大小</span><br><span class="line">cache-size=1000</span><br><span class="line"></span><br><span class="line">#如果想启用dnssec请配置添加下面配置，不用就删掉</span><br><span class="line">dnssec</span><br><span class="line">trust-anchor=.,19036,8,2,49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5</span><br><span class="line">trust-anchor=.,20326,8,2,E06D44B80B8F1D39A95C0B0D7C65D08458E880409BBC683457104237C7F8EC8D</span><br><span class="line">dnssec-check-unsigned</span><br></pre></td></tr></table></figure></p>
-<p>继续新建<code>/etc/resolv.dnsmasq.conf</code> 文件，配置上游dns服务，会按顺序解析，根据喜好自行选择配置。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nameserver 8.8.8.8</span><br><span class="line">nameserver 119.29.29.29</span><br><span class="line">nameserver 114.114.114.114</span><br></pre></td></tr></table></figure></p>
-<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">以前台调试模式运行，会输出查询日志</span><br><span class="line">dnsmasq -d -q</span><br></pre></td></tr></table></figure>
-<p>然后我们登录另一个终端使用<code>dig</code>命令解析<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dig qq.com @127.0.0.1</span><br></pre></td></tr></table></figure></p>
-<p>输出类似如下，表示dns服务已经搭建成功<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dnsmasq: query[A] qq.com from 127.0.0.1</span><br><span class="line">dnsmasq: forwarded qq.com to 119.29.29.29</span><br><span class="line">dnsmasq: reply qq.com is 125.39.240.113</span><br><span class="line">dnsmasq: reply qq.com is 61.135.157.156</span><br></pre></td></tr></table></figure></p>
-<p>现在在你本机使用 <code>dig qq.com @your_server_public_ip</code> 也可以解析到了。</p>
-<p>开机启动和守护进程管理可以通过<code>Supervisor</code> 启动<br><code>/etc/supervisor/conf.d/dnsmasq.conf</code></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[program:dnsmasq]</span><br><span class="line">command=/usr/local/sbin/dnsmasq -k </span><br><span class="line">autorestart=false</span><br><span class="line">user=root</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>如果要输出dnsmasq日志做后续分析，加上<code>-q</code>参数，日志输出到了<code>/var/log/syslog</code> 文件中，可以通过<code>journalctl -f</code> 查看实时输出的日志</p>
-</blockquote>
-<p>然后supervisor更新一下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">supervisorctl update</span><br><span class="line">supervisorctl status</span><br><span class="line"></span><br><span class="line">输出</span><br><span class="line">...</span><br><span class="line">dnsmasq                          RUNNING   pid 13035, uptime 0:04:18</span><br></pre></td></tr></table></figure></p>
-<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>此时 dnsmasq 已经在正常运行，可以设置电脑dns server为自己服务器ip了，但是解析国内地址访问不太理想。</p>
+                <p>几个月前已经发布<a href="https://tools.ietf.org/html/rfc8446" target="_blank" rel="noopener">TLS 1.3正式版</a>，在Chrome 70+和Firefox 63+也已经正式支持TLS1.3 Final版本的协议。</p>
+<p>本文使用<a href="https://github.com/google/boringssl" target="_blank" rel="noopener">BoringSSL</a>为nginx提供ssl支持，也可以使用<a href="https://wiki.openssl.org/index.php/TLS1.3" target="_blank" rel="noopener">openssl 1.1.1+</a>版本，但是目前<a href="https://www.libressl.org/" target="_blank" rel="noopener">LibreSSL</a>还不支持。</p>
+<h5 id="编译boringssl"><a href="#编译boringssl" class="headerlink" title="编译boringssl"></a>编译boringssl</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#下载源码 或者直接 git clone</span><br><span class="line">wget https://github.com/google/boringssl/archive/master.zip -O boringssl.zip</span><br><span class="line">unzip -q boringssl.zip</span><br><span class="line">mv boringssl-master boringssl</span><br><span class="line"></span><br><span class="line">cd boringssl &amp;&amp; mkdir build &amp;&amp; cd build &amp;&amp; cmake ../ &amp;&amp; make &amp;&amp; cd ../</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 保存编译结果</span><br><span class="line"># 新建boringssl/.openssl/目录，将boringssl/include/全部复制到boringssl/.openssl/include/</span><br><span class="line"># 新建boringssl/.openssl/lib/目录，将boringssl/build/crypto/libcrypto.a 和 boringssl/build/ssl/libssl.a 文件复制到 boringssl/.openssl/lib 目录</span><br><span class="line"></span><br><span class="line">mkdir -p .openssl/lib &amp;&amp; cd .openssl &amp;&amp; cp -R ../include . &amp;&amp; cd ../</span><br><span class="line">cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib</span><br><span class="line">cd ../</span><br></pre></td></tr></table></figure>
+<h4 id="编译Nginx"><a href="#编译Nginx" class="headerlink" title="编译Nginx"></a>编译Nginx</h4><p>下载依赖</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget https://nginx.org/download/nginx-1.15.5.tar.gz</span><br><span class="line">wget https://zlib.net/zlib-1.2.11.tar.gz</span><br><span class="line">wget https://ftp.pcre.org/pub/pcre/pcre-8.42.tar.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">解压</span><br><span class="line">tar xzf nginx-1.15.5.tar.gz</span><br><span class="line">tar xzf zlib-1.2.11.tar.gz</span><br><span class="line">tar xzf pcre-8.42.tar.gz</span><br><span class="line"></span><br><span class="line">编译</span><br><span class="line">cd nginx-1.15.5</span><br><span class="line">./configure --with-openssl=../boringssl --with-pcre=../pcre-8.42 --with-zlib=../zlib-1.2.11 --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">###!!! 修复编译问题</span><br><span class="line">touch ../boringssl/.openssl/include/openssl/ssl.h</span><br><span class="line"></span><br><span class="line">make </span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>查看Nginx编译信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nginx -V</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">nginx version: nginx/1.15.5</span><br><span class="line">built by gcc 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.10) </span><br><span class="line">built with OpenSSL 1.1.0 (compatible; BoringSSL) (running with BoringSSL)</span><br><span class="line">TLS SNI support enabled</span><br><span class="line">configure arguments: --with-openssl=../boringssl/ --with-pcre=../pcre-8.42 --with-zlib=../zlib-1.2.11 --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_realip_module</span><br></pre></td></tr></table></figure>
+<p>配置<code>nginx.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line"></span><br><span class="line">ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;</span><br><span class="line">ssl_ecdh_curve auto;</span><br><span class="line"></span><br><span class="line">ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">ssl_ciphers &quot;[TLS_AES_128_GCM_SHA256|TLS_CHACHA20_POLY1305_SHA256]:[TLS_AES_256_GCM_SHA384|TLS_AES_128_CCM_8_SHA256|TLS_AES_128_CCM_SHA256]:[ECDHE-ECDSA-CHACHA20-POLY1305|ECDHE-ECDSA-AES128-GCM-SHA256|ECDHE-RSA-CHACHA20-POLY1305|ECDHE-RSA-AES128-GCM-SHA256|DHE-RSA-CHACHA20-POLY1305]:[ECDHE-ECDSA-AES256-GCM-SHA384|ECDHE-RSA-AES256-GCM-SHA384]:[ECDHE-ECDSA-AES128-SHA|ECDHE-RSA-AES128-SHA]:[ECDHE-ECDSA-AES256-SHA|ECDHE-RSA-AES256-SHA]:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>检测是否成功开启使用TLS1.3</p>
 <ul>
-<li><p>借助dnsmasq-china-list项目的dns配置加速解析，默认使用的是<code>114.114.114.114</code>解析国内域名，可以通过项目自带的<code>dnsmasq-update-china-list</code> 脚本替换为其他的dns服务器。<br>手动安装，更多用法查看项目说明</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir /etc/dnsmasq.d</span><br><span class="line">wget -P /etc/dnsmasq.d https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf</span><br></pre></td></tr></table></figure>
-<p>修改<code>/etc/dnsmasq.conf</code> 配置文件，在后面添加一行<code>conf-dir=/etc/dnsmasq.d</code></p>
-</li>
-<li><p>使用EDNS-CLIENT-SUBNET 优化自用线路<br>建议使用阿里公共DNS <code>223.5.5.5</code> 解析速度比较理想。</p>
-</li>
+<li>Chrome 开发者工具 -&gt; Security 可以看到连接版本</li>
+<li>在openssl 1.1.1+ 版本中<code>openssl s_client -connect 127.0.0.1:443</code></li>
+<li>使用上面编译好的<code>boringssl/build/tool/bssl s_client -connect 127.0.0.1:443</code></li>
 </ul>
-<p>最后重启dnsmasq生效<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">supervisorctl restart dnsmasq</span><br></pre></td></tr></table></figure></p>
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p><a href="http://tools.cloudxns.net/index.php/Index/Diag" target="_blank" rel="noopener">http://tools.cloudxns.net/index.php/Index/Diag</a></p>
-<p>参考:<br><a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" target="_blank" rel="noopener">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a><br><a href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions</a><br><a href="https://github.com/felixonmars/dnsmasq-china-list/" target="_blank" rel="noopener">https://github.com/felixonmars/dnsmasq-china-list/</a></p>
+<p>输出    </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connecting to 127.0.0.1:443</span><br><span class="line">Connected.</span><br><span class="line">  Version: TLSv1.3</span><br><span class="line">  Resumed session: no</span><br><span class="line">  Cipher: TLS_AES_128_GCM_SHA256</span><br><span class="line">  ECDHE curve: X25519</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>浏览器SSL检测 <a href="https://ssl.hakase.io/" target="_blank" rel="noopener">https://ssl.hakase.io/</a></p>
+<blockquote>
+<p>使用Cloudflare CDN会默认开启了TLS1.3。</p>
+</blockquote>
 
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2018/07/27/dart_getting_started/" data-toggle="tooltip" data-placement="top" title="Dart 简单入门">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2017/12/15/2017-shanghai-gdd/" data-toggle="tooltip" data-placement="top" title="2017上海 Google Developer Days">Next Post &rarr;</a>
+                        <a href="/2018/07/31/decrypt_android_wechat_db/" data-toggle="tooltip" data-placement="top" title="几种解密Android版微信聊天数据库的方法">Next Post &rarr;</a>
                     </li>
                     
                 </ul>

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <!-- Head tag -->
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,14 +24,18 @@
 
     <link rel="canonical" href="https://blog.zzzmode.com/archives/2018/">
 
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
+
+
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/blog-style.css">
 
     <!-- Pygments Github CSS -->
     <link rel="stylesheet" href="/css/syntax.css">
+
 </head>
 
 <style>
@@ -43,8 +47,8 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
-" data-ishome = "false" >
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost="false" data-istags="false
+" data-ishome="false">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header page-scroll">
@@ -132,10 +136,13 @@
             <div class="container">
                 <div class="site-heading text-center">
                     <div class="about-me">
-<!--移动端头部显示-->
 
-                        <h5><a href="/about/">Zheng Li</a></h5>
-                        <p>Android developer</p>
+                        
+                        <h5><a href="/about/">
+                                Zheng Li</a></h5>
+                        <p>
+                            Android developer
+                        </p>
                     </div>
                 </div>
             </div>
@@ -151,8 +158,31 @@
 
 
 
-<div class="post-preview "
-     style="background-image: url('')">
+<div class="post-preview " style="background-image: url('')">
+    <a href="/2018/10/24/nginx-tls13/">
+        <h2 class="post-title">
+            Nginx TLS1.3 编译配置
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-10-24
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                几个月前已经发布TLS 1.3正式版，在Chrome 70+和Firefox 63+也已经正式支持TLS1.3 Final版本的协议。
+本文使用BoringSSL为nginx提供ssl支持，也可以使用openssl 1.1.1+版本，但是目前LibreSSL还不支持。
+编译boringssl#下..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview " style="background-image: url('')">
     <a href="/2018/07/31/decrypt_android_wechat_db/">
         <h2 class="post-title">
             几种解密Android版微信聊天数据库的方法
@@ -175,8 +205,7 @@
 
 
 
-<div class="post-preview "
-     style="background-image: url('')">
+<div class="post-preview " style="background-image: url('')">
     <a href="/2018/07/27/dart_getting_started/">
         <h2 class="post-title">
             Dart 简单入门
@@ -199,8 +228,7 @@
 
 
 
-<div class="post-preview "
-     style="background-image: url('')">
+<div class="post-preview " style="background-image: url('')">
     <a href="/2018/03/31/dnsmasq-dns-server/">
         <h2 class="post-title">
             使用dnsmasq搭建DNS Server
@@ -292,6 +320,27 @@
 
             
 
+
+
+
+            <!-- 其他 -->
+            <hr>
+            <div class="tools">
+
+                    <h5 style="margin-top: 15px;margin-left: 10px">工具</h5>
+                    <ul>
+                        
+                        <li><a href="https://www.zzzmode.com/mytools/charles/" target="_blank">Charles 在线破解</a></li>
+                        <li><a href="https://www.zzzmode.com/mytools/ua/" target="_blank">UA&IP 查看</a></li>
+                        
+
+                        <li><a href="https://github.com/8enet/AppOpsX" target="_blank">AppOpsX</a></li>
+                        
+                    </ul>
+        
+
+            </div>
+            
         </div>
     </div>
 </div>
@@ -323,7 +372,7 @@
 
                 
                     <li>
-                        <a target="_blank"  href="https://github.com/8enet">
+                        <a target="_blank" href="https://github.com/8enet">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -348,11 +397,9 @@
     </div>
 </footer>
 
-<!-- jQuery -->
-<script src="/js/jquery.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js"></script>
+<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 <!-- Custom Theme JavaScript -->
 <script src="/js/blog.js"></script>
